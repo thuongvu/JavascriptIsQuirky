@@ -102,37 +102,39 @@ describe('Javascript: ', function() {
 					expect(Boolean(foo)).toBe(false);
 				});			
 			});
+		});
 
-			describe("Number: ", function() {
+		describe("Number: ", function() {
 
 	// TODO
 	// describe("parseInt", function() {
-		
+
 	// });
 
-				describe("NaN (Not a Number): ", function() {
-					it(" will return NaN in any operation involving NaN", function() {
-						expect(NaN / 10).toEqual(NaN);
-					});
-
-					it(" is not equal to any value, including NaN", function() {
-						expect(NaN == NaN).toEqual(false);
-					});
-
-					it(" has a isNaN() function that accepts a single argument of any data type to determine if value is NaN", function() {
-						// isNaN will first attempt to convert any value into a number
-						expect(isNaN(NaN)).toBe(true); // NaN is not a number
-						expect(isNaN(1)).toBe(false); // number 1
-						expect(isNaN("1")).toBe(false); // string "1" is converted
-						expect(isNaN("foo")).toBe(true); // can't convert "foo" to a number
-						expect(isNaN(true)).toBe(false); // true can convert to 1
-					});
-
+			describe("NaN (Not a Number): ", function() {
+				it(" will return NaN in any operation involving NaN", function() {
+					expect(NaN / 10).toEqual(NaN);
 				});
 
-			});
+				it(" is not equal to any value, including NaN", function() {
+					expect(NaN == NaN).toEqual(false);
+				});
 
+				it(" has a isNaN() function that accepts a single argument of any data type to determine if value is NaN", function() {
+					// isNaN will first attempt to convert any value into a number
+					expect(isNaN(NaN)).toBe(true); // NaN is not a number
+					expect(isNaN(1)).toBe(false); // number 1
+					expect(isNaN("1")).toBe(false); // string "1" is converted
+					expect(isNaN("foo")).toBe(true); // can't convert "foo" to a number
+					expect(isNaN(true)).toBe(false); // true can convert to 1
+				});
+			});
 		});
+
+
+
+
+	
 
 
 		
