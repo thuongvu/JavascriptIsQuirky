@@ -67,7 +67,43 @@ describe('Javascript: ', function() {
 			});
 		});
 
-		
+		describe("Boolean: ", function() {
+			describe("can convert other data types to a boolean value with the Boolean() casting function: ", function() {
+				
+				it("Non-empty strings are true, empty strings are false", function() {
+					var str = "foo";
+					var emptyStr = "";
+					expect(Boolean(str)).toBe(true);
+					expect(Boolean(emptyStr)).toBe(false);
+				});
+
+				it("Non-zero numbers are true, 0 and NaN are false", function() {
+					var positiveNum = 1;
+					var negativeNum = -1;
+					var zero = 0;
+					var notANumber = NaN;
+
+					expect(Boolean(positiveNum)).toBe(true);
+					expect(Boolean(negativeNum)).toBe(true);
+					expect(Boolean(zero)).toBe(false);
+					expect(Boolean(notANumber)).toBe(false);
+				});
+				
+				it("objects are true, null is false", function() {
+					var obj = {};
+					var nullObj = null;
+
+					expect(Boolean(obj)).toBe(true);
+					expect(Boolean(nullObj)).toBe(false);
+				});
+				
+				it("undefined cannot be true, it is always converted to false", function() {
+					var foo = undefined;
+					expect(Boolean(foo)).toBe(false);
+				});			
+			});
+
+		});
 
 
 		
