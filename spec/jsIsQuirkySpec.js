@@ -131,6 +131,64 @@ describe('Javascript: ', function() {
 			});
 		});
 
+		describe("String: ", function() {
+			it("The toString() method is available on numbers, booleans, objects, and strings", function() {
+				// number
+				var num = 1;
+				var numToString = num.toString();
+				// boolean
+				var isTrue = true.toString();
+				// object
+				var obj = {"foo": "bar"};
+				var objToString = obj.toString();
+				// string
+				var str = "foo";
+				var strToString = str.toString();
+				// null
+				var isNull = null;
+				// var isNulltoString = isNull.toString(); // will throw error
+				// undefined
+				var isUndefined = undefined;
+				// var isUndefinedToString = isUndefined.toString() // will throw error
+
+				expect(numToString).toBe("1");
+				expect(isTrue).toBe("true");
+				expect(strToString).toBe("foo");
+			});
+		});
+
+		describe("Object: ", function() {
+			it(" Each instance should have properties and methods", function() {
+				var obj = new Object();
+				obj.foo = "a";
+
+				// Constructor
+				expect(obj.constructor).toBeDefined(); // constructor is the function used to create the object
+
+				// hasOwnProperty
+				expect(obj.hasOwnProperty("foo")).toBe(true); // given property exists on object instance
+				expect(obj.hasOwnProperty("bar")).toBe(false);
+
+				// isPrototypeOf(Object)
+				expect(obj.isPrototypeOf()).toBeDefined(); // determines if object is a prototype of another object
+
+				// propertyIsEnumerable(propertyName)
+				expect(obj.propertyIsEnumerable("foo")).toBe(true); // indicates if the given property can be enumeated in for in statement
+				expect(obj.propertyIsEnumerable("bar")).toBe(false);
+				expect(obj.propertyIsEnumerable("constructor")).toBe(false);
+
+				// toLocaleString()
+				expect(obj.toLocaleString()).toBeDefined(); // returns string representation for locale of execution environment
+
+				// toString()
+				expect(obj.toString()).toBeDefined(); // returns a string represenation of the object
+
+				// valueOf()
+				expect(obj.toString()).toBeDefined(); // returns string, number, boolean equivalent of objct, often same value as toString()
+
+			});
+			
+		});
 
 
 
