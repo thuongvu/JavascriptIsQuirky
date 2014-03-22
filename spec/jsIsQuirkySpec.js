@@ -158,33 +158,45 @@ describe('Javascript: ', function() {
 		});
 
 		describe("Object: ", function() {
-			it(" Each instance should have properties and methods", function() {
-				var obj = new Object();
-				obj.foo = "a";
+			describe(" Each instance should have these properties and methods: ", function() {
+				// beforeEach(function() {
+					var obj = new Object();
+					obj.foo = "a";
+				// });
+				
+				it("Constructor", function() {
+					expect(obj.constructor).toBeDefined(); // constructor is the function used to create the object
+				});
+					
+				it("hasOwnProperty('property')", function() {
+					// given property exists on object instance and not on the prototype
+					expect(obj.hasOwnProperty("foo")).toBe(true); 
+					expect(obj.hasOwnProperty("bar")).toBe(false);
 
-				// Constructor
-				expect(obj.constructor).toBeDefined(); // constructor is the function used to create the object
+				});
 
-				// hasOwnProperty
-				expect(obj.hasOwnProperty("foo")).toBe(true); // given property exists on object instance
-				expect(obj.hasOwnProperty("bar")).toBe(false);
+				it("isPrototypeOf('prototype')", function() {
+					expect(obj.isPrototypeOf()).toBeDefined(); // determines if object is a prototype of another object
+				});
+				
+				it("propertyIsEnumerable('propertyName')", function() {
+					expect(obj.propertyIsEnumerable("foo")).toBe(true); // indicates if the given property can be enumeated in for in statement
+					expect(obj.propertyIsEnumerable("bar")).toBe(false);
+					expect(obj.propertyIsEnumerable("constructor")).toBe(false);
+				});
 
-				// isPrototypeOf(Object)
-				expect(obj.isPrototypeOf()).toBeDefined(); // determines if object is a prototype of another object
+				it("toLocaleString()", function() {
+					expect(obj.toLocaleString()).toBeDefined(); // returns string representation for locale of execution environment
+				});			
 
-				// propertyIsEnumerable(propertyName)
-				expect(obj.propertyIsEnumerable("foo")).toBe(true); // indicates if the given property can be enumeated in for in statement
-				expect(obj.propertyIsEnumerable("bar")).toBe(false);
-				expect(obj.propertyIsEnumerable("constructor")).toBe(false);
-
-				// toLocaleString()
-				expect(obj.toLocaleString()).toBeDefined(); // returns string representation for locale of execution environment
-
-				// toString()
-				expect(obj.toString()).toBeDefined(); // returns a string represenation of the object
-
+				it("toString()", function() {
+					expect(obj.toString()).toBeDefined(); // returns a string represenation of the object
+				});
+				
 				// valueOf()
-				expect(obj.toString()).toBeDefined(); // returns string, number, boolean equivalent of objct, often same value as toString()
+				it("valueOf()", function() {
+					expect(obj.toString()).toBeDefined(); // returns string, number, boolean equivalent of objct, often same value as toString()
+				});
 
 			});
 			
