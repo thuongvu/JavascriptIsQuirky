@@ -318,6 +318,137 @@ describe('Javascript: ', function() {
 	}); // Syntax/DataTypes/Functions end
 
 	describe("Reference Types:", function() {
-		
+		describe("Object Type:", function() {
+			// TO DO
+		});
+
+		describe("Array Type:", function() {
+			describe("instanceOf vs isArray: ", function() {
+				it("isArray() should determine if a given value is an array regardless of global execution context", function() {
+					var arr = [];
+					expect(Array.isArray(arr)).toBe(true);
+				});
+			})
+
+			describe("Conversion methods: ", function() {
+				it("toString() and valueOf() returns  the same -- a comma seperated string of each element in array", function() {
+					var alphabet = ['a', 'b', 'c'];
+					expect(alphabet.toString()).toMatch('a,b,c');
+					expect(alphabet.valueOf()).toMatch('a,b,c')
+				});
+
+				it("We can overwrite the toString method on an object", function() {
+					var obj1 = {
+						toString: function() {
+							return "foo";
+						}
+					};
+					var obj2 = {
+						toString: function() {
+							return "bar";
+						}
+					};
+					var arr = [obj1, obj2];
+
+					expect(arr.toString()).toMatch("foo,bar");
+				});
+			});
+
+			describe("Stack Methods:", function() {
+				// last in, first out.  The most recently added item is the first removed
+				// insertion = push & removal = pop
+				// only occur at the top of the stack
+
+				it("push() should accept any number of arguments and add them to the end of the array, returning the array's new length", function() {
+					var arr = [];
+					arr.push(1,2);
+					expect(arr.length).toMatch(2);
+					arr.push(5);
+					expect(arr.length).toMatch(3);
+					expect(arr.push(7)).toBe(4); // remember that push() returns the array's new length
+				});
+
+				it("pop() should  remove the last element in the array, decrease the array's length, and return the item", function() {
+					var arr = [1,4,6,8];
+					arr.pop();
+					expect(arr.length).toMatch(3);
+					expect(arr).toMatch([1,4,6]);
+					expect(arr.pop()).toBe(6); // remember that pop() returns the item popped
+				});
+			});
+
+			describe("Queue methods:", function() {
+				// FIFO - first in, first out
+				// adds items to the end of the list, and retrieves items from front of list
+				// with shift() removing first item, and push() adding to the end of the array = queue
+				it("shift() removes the first item of the array and returns it, decreasing length of array", function() {
+					var arr = [1,4,6,8];
+					arr.shift();
+					expect(arr.length).toMatch(3);
+					expect(arr).toMatch([4,6,8]);
+					expect(arr.shift()).toBe(4); // remember that shift() returns the item shifted
+				});
+
+				// if we add item to front of the array(), and pop(), remove item from ack of array, queue = in opposite direction
+				it("unshift() adds any number of arguments to the front of the array and returns length of array", function() {
+					var arr = [2,4,6,8];
+					arr.unshift(1,3);
+					expect(arr).toMatch([1,3,2,4,6,8]);
+					expect(arr.unshift(5)).toBe(7); // remember that unshift() returns the length of array
+				});
+			});
+
+			describe("Reordering methods:", function() {
+				it("concat() copies the array, appends the method arguments to the end, and returns the newly constructed array", function() {
+					var arr = [1,2,3];
+					var arr2 = arr.concat(4,5);
+					expect(arr2).toMatch([1,2,3,4,5]);
+					expect(arr).toMatch([1,2,3]); // arr is left un-modified
+				});
+
+				it("if one or more arrays are passed into concat(), the values are appended to the back of the existing array", function() {
+					var arr = [1,2,3];
+					var arr2 = arr.concat(4,5,[6,7,8]);
+					expect(arr2).toMatch([1,2,3,4,5,6,7,8]);
+					expect(arr).toMatch([1,2,3]); // arr is left un-modified
+				});
+
+				it("slice() accepts one or two arguments: starting and stopping positions of items to return", function() {
+					var arr = [1,2,3,4,5];
+					var arr2 = arr.slice(1,3); // start coping at index 1 and stop copying at index 3
+					expect(arr2).toMatch([2,3]); 
+				});
+			});
+
+
+		}); // array type end
+
+
+
+
+
 	}); // reference types end
 }); // Javascript end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
