@@ -202,6 +202,39 @@ describe('Javascript: ', function() {
 			
 		});
 
+		describe("Operators: ", function() {
+			describe("Equality Operators: ", function() {
+				describe("Equal and not Equal == ", function() {
+					it("If one operand is string and other is number, convert the string into a number before checking", function() {
+						expect(1 == "1").toBe(true);
+					});
+					it("If one operand is boolean, convert it to number before checking", function() {
+						expect(true == 1).toBe(true);
+					});
+					it("If one operand is object and other is not, valueOf() called to retrieve primitive value to compare", function() {
+						var obj = {"foo": "bar"};
+// TO DO - FIGURE OUT HOW TO TEST THIS
+					});
+					it("Values of null and undefined are equal", function() {
+						expect(null == undefined).toBe(true);
+					})
+
+				});
+				describe("Identically Equal ===", function() {
+					
+					it("does not do type conversion", function() {
+						expect(1 == "1").toBeTruthy(); // true because of type conversion of ==
+						expect(1 === "1").toBe(false); // no type conversion
+					});
+
+					it("null == undefined, but null !==undefined because they are not the same type", function() {
+						expect(null == undefined).toBeTruthy();
+						expect(null === undefined).toBe(false);
+					});
+					
+				});
+			});
+		});
 
 
 	
