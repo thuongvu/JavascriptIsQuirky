@@ -477,8 +477,41 @@ describe('Javascript: ', function() {
 
 // TODO pg 140 has great example
 
-			describe("Function Internals", function() {
+			describe("Function Internals:", function() {
+				describe("The arguments object", function() {
 
+					it("has a property called callee, a pointer to the function that owns the arguments object", function() {
+						// a normal factorial recursive function
+						function factorial(num) {
+							if (num <= 1) {
+								return 1;
+							} else {
+								return num * factorial(num -1);
+							};
+						};
+						expect(factorial(5)).toEqual(120);
+
+						// let's decouple the execution of the function name, "factorial" within the function using arguments.callee
+						function factorialDecoupled(num) {
+							if (num <= 1) {
+								return 1;
+							} else {
+								return num * arguments.callee(num -1); // ensures that it calls the function, regardless of how the function is referenced
+							};
+						};
+
+						expect(factorialDecoupled(5)).toEqual(120); // trying it out, it works!
+
+						var factorialDecoupledCopy = factorialDecoupled; // storing the function pointer in a new variable
+						factorialDecoupled = function() { // reassign factorialDecoupled
+							return "Broke the link";
+						};
+
+						expect(factorialDecoupledCopy(5)).toEqual(120); // function pointer intact because argumens.callee always references correct function
+						expect(factorialDecoupled(5)).toEqual("Broke the link");
+
+					});
+				});
 			});
 			describe("Function properties and methods", function() {
 
