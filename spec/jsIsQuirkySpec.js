@@ -414,10 +414,46 @@ describe('Javascript: ', function() {
 				});
 
 				it("slice() accepts one or two arguments: starting and stopping positions of items to return", function() {
-					var arr = [1,2,3,4,5];
-					var arr2 = arr.slice(1,3); // start coping at index 1 and stop copying at index 3
-					expect(arr2).toMatch([2,3]); 
+					var arr = ['red', 'orange', 'yellow', 'green', 'blue'];
+					var arr2 = arr.slice(1,3); // start coping at index 1 (position 1) and stop copying before index 3 (position2)
+					expect(arr2).toMatch(['orange', 'yellow']); 
 				});
+
+				it("if slice() only has one argument passed in, it begins copying from that index", function() {
+					var arr = ['red', 'orange', 'yellow', 'green', 'blue'];
+					var arr2 = arr.slice(2); // start copying at index 2, or position 2
+					expect(arr2).toMatch(['yellow', 'green', 'blue']); 
+				});
+
+//TO DO slice with negative numbers page 117
+
+				it("splice() can delete any number of items from an array w/ 2 arguments", function() {
+					var arr = ['red', 'orange', 'yellow', 'green', 'blue'];
+					arr.splice(2,2) // first argument = first item to delete, 2nd argument is number of items to delete
+					expect(arr).toMatch(['red', 'orange', 'blue']);
+				});
+
+				it("splice() can insert items into a specific position of an array w/ 3 arguments", function() {
+					var arr = ['red', 'orange', 'yellow', 'green', 'blue'];
+					arr.splice(3, 0, "violet"); // first arg = starting position, second arg = 0, or number of items to delete, third arg = item to insert
+					expect(arr).toMatch(['red', 'orange', 'yellow', 'violet', 'green', 'blue']);
+				});
+
+				it("splice() can replace items in a specific position of an array w/ 3 arguments", function() {
+					var arr = ['red', 'orange', 'yellow', 'green', 'blue'];
+					arr.splice(2, 1, "purple", "brown"); // first arg = starting position, second arg = items to delete, third arg = items to add
+					expect(arr).toMatch(['red', 'orange', 'purple', 'brown', 'green', 'blue']);
+				});
+
+				it("splice() always returns an array that contains any items that were removed, or empty array", function() {
+					var arr = ['red', 'orange', 'yellow', 'green', 'blue'];
+					expect(arr.splice(2, 1, "purple", "brown")).toMatch(['yellow']);
+
+					var arr = ['red', 'orange', 'yellow', 'green', 'blue'];
+					expect(arr.splice(3, 0, "violet")).toMatch([]);
+
+				});
+
 			});
 
 
