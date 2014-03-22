@@ -236,7 +236,88 @@ describe('Javascript: ', function() {
 			});
 		});
 
+		describe("Functions:", function() {
+			describe("The arguments object:", function() {
 
+				it("acts like an array so you can access each argument using bracket notation", function() {
+					function foo(argumentA, argumentB) {
+						expect(arguments.length).toEqual(2);
+						expect(arguments[0]).toMatch("hello");
+						expect(arguments[1]).toMatch("world");
+					};
+					foo("hello", "world");
+				});
+
+				it("can be used to check the number of arguments passed into the function via length property", function(){
+					function foo(argumentA, argumentB) {
+						expect(arguments.length).toEqual(2);
+					};
+					foo("hello", "world");
+				});
+
+				it("can allow developers to let functions accept any number of arguments", function() {
+					function addAccordingToArgumentsLength(num1, num2) {
+						if (arguments.length === 1) {
+							return arguments[0] + 1;
+						} else if (arguments.length === 2) {
+							return arguments[0] + arguments[1];
+						};
+					};
+					expect(addAccordingToArgumentsLength(5)).toEqual(6); // 5 + 1 = 6;
+					expect(addAccordingToArgumentsLength(5,10)).toEqual(15);
+				});
+
+				it("can be used along with named arguments as well", function() {
+					function addAccordingToArgumentsLength(num1, num2) {
+						return arguments[0] + num2;
+					};
+					expect(addAccordingToArgumentsLength(5,10)).toEqual(15);
+				});
+
+				describe(" values in the arguments object are kept in sync with the named arguments:", function() {
+					
+					it("Therefore the change in arguments[1] will change the value of the named argument, num2", function() {
+						function addAccordingToArgumentsLength(num1, num2) {
+							arguments[1] = 10;
+							return arguments[0] + num2;
+						};
+						expect(addAccordingToArgumentsLength(1,2)).toEqual(11);
+					});
+
+					it("But if only one argument is passed in, changing arguments[1] will not reflect in the named argument", function() {
+						function addAccordingToArgumentsLength(num1, num2) {
+							arguments[1] = 10;
+							return arguments[0] + num2;
+						};
+						expect(addAccordingToArgumentsLength(1)).toEqual(NaN);
+						// the length of the arguemnts object is based on the number of arguments passedin, not number of named arguemnts listed for the function
+					});
+
+					it("Named arguments not passed into the function are assigned value undefined", function() {
+						function returnSecondArgument(num1, num2) {
+							arguments[1] = 10;
+							return num2;
+						};
+						expect(returnSecondArgument(1)).toBe(undefined);
+					});
+
+					it("In strict mode, named argument num2 will remain undefined even if arguments[1] is set to a value", function() {
+						function strictFunction(num1, num2) {
+							'use strict';
+							function returnSecondArgument(num1, num2) {
+								arguments[1] = 10;
+								return num2;
+							};
+						}
+						expect(strictFunction(1,2)).toBe(undefined);
+					});
+
+
+
+				});
+
+			});
+		});
 	
 
 
