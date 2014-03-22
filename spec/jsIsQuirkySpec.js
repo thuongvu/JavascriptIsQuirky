@@ -451,11 +451,40 @@ describe('Javascript: ', function() {
 
 					var arr = ['red', 'orange', 'yellow', 'green', 'blue'];
 					expect(arr.splice(3, 0, "violet")).toMatch([]);
-
 				});
 
 			});
+// TODO location methods, 118
+		// iterative methods 119
+		// reduction methods 121
 
+		describe("Function Type:", function() {
+
+			describe("Functions as Values:", function() {
+				it("functions can return functions", function() {
+					function invoke(func, withThisArgument) { // 1st argument is a function, 2nd is argument to be a value to pass to that function
+						return func(withThisArgument);
+					};
+
+					function sayHelloFunc(name) {
+						return "Hello, " + name;
+					};
+
+					expect(invoke(sayHelloFunc, "Fresh Prince of Bel Air")).toMatch("Hello, Fresh Prince of Bel Air");
+
+				});
+			});
+
+// TODO pg 140 has great example
+
+			describe("Function Internals", function() {
+
+			});
+			describe("Function properties and methods", function() {
+
+			});
+
+		})
 
 		}); // array type end
 

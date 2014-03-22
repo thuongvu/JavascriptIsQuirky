@@ -1,4 +1,4 @@
-Javascript Is Quirky 
+Javascript Is Quirky (Work in Progress)
 ==============================================
 
 Inspired by mrdavidlaing's JavaScript Koans, I decided I would make my own "Koans" in order to learn more about vanilla JavaScript.
