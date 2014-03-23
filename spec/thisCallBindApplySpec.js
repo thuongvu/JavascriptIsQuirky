@@ -38,20 +38,18 @@ describe("This:", function() {
 					user.returnName();
 				};
 				expect(callReturnName()).toBe(undefined);
-				
-				// var bindedUserReturnName = user.returnName.bind(user);
-				// function callBindedUserReturnName () {
-				// 	bindedUserReturnName();
-				// };
-				// function bindReturnName() {
-				// 	var binded = user.returnName.bind(user);
-				// 	binded();
-				// };
-				// console.log(callBindedUserReturnName());
+
+				function invokeCallback(callback) {
+					// do something else...
+					callback();
+				};
+
+				// console.log(invokeCallback(user.returnName));
+				// console.log(invokeCallback(user.returnName.bind(user)));
 	// THIS DOESNT WORK, FIX LATER TODO		
 			});
 		});
-		describe("2. Inside Closures", function() {
+		describe("2. Inside Closures:", function() {
 			it("A closure can't access the outer function's this var because this is accessible only by the function itself, not inner function");
 			it("Inside an anonymous function, set the this value to another variable before entering the method", function() {
 				var animals = {
@@ -60,7 +58,7 @@ describe("This:", function() {
 					logEachAnimal: function() {
 						var that = this; // we set the value of "this" to "that" variable, so we can use later
 						this.data.forEach(function(animal) {
-							that.listOfSpecies.push(animal.species);
+							that.listOfSpecies.push(animal.species); //inside, we use that
 						});
 					}
 				};
@@ -69,14 +67,32 @@ describe("This:", function() {
 				animals.logEachAnimal();
 				expect(list.length).toBe(2);
 			});
+		});
 
+		describe("3. When a method is assigned to a variable,", function() {
+			it("use a bind() to maintain 'this'", function() {
+				var carFactory = {
+					car: {brand: "Ford"},
+					returnCar: function() {
+						return this.car.brand;
+					}
+				};
+				// this will throw an error because it will executes in a global context, and there is no car.brand globally
+				var returnCarFactoryCar = carFactory.returnCar;
+				expect(function() {returnCarFactoryCar();}).toThrow(new TypeError("Cannot read property 'brand' of undefined"));
+				// set this value with the bind method to carFactory
+				var returnBindedCar = carFactory.returnCar.bind(carFactory);
+				returnBindedCar();
+			});
+
+			
 
 		});
 		
 
 
 
-	});
+	}); // tricky uses of this end
 	
 
 
