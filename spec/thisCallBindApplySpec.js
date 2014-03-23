@@ -218,6 +218,72 @@ describe("Call, bind, apply:", function() {
 				expect(arrayLikeObj[0]).toMatch(["Georgia", "Henry"]);
 			});
 
+			it("One can use call/apply to extract parameters passed into a function's arguments object, an array-like object property on all functions", function() {
+				function foo(bar) {
+					// borrowing Array.slice using call
+					// first argument is arguments object
+					// 2nd argument tells function to return copy of array starting at index 1
+					var args = Array.prototype.slice.call(arguments);
+					return args;
+					// args becomes a real array, with a copy of all the parameters passed to transitionTo
+				};
+				expect(foo("Hello", "World")).toMatch(["Hello", "World"]);
+			});
+
+			it("One can borrow methods and functions from one's own custom methods and functions", function() {
+				var gameController = {
+					scores: [5,6,7,8,9,10],
+					avgScore: null
+				};
+
+				var appController = {
+					scores: [15,16,17,18,19,20],
+					avgScore: null,
+					avg: function () {
+						var sumOfScores = this.scores.reduce(function(prev, cur, index, array) {
+							return prev + cur;
+						});
+						this.avgScore = sumOfScores / this.scores.length;
+					}
+				};
+
+				// use apply() so the 2nd argument must be an array
+				// we borrow appController's avg method, and use apply to set the context object to be gameController
+				appController.avg.apply(gameController, gameController.scores);
+				expect(gameController.avgScore).toBe(7.5);
+
+				// we haven't invoked appController.avg on the appController object
+				expect(appController.avgScore).toBeNull();
+
+			});
+
+			it("if we change the parent method that is inherited, all changes to the parent will reflect on the child method", function() {
+				var gameController = {
+					scores: [5,6,7,8,9,10],
+					avgScore: null
+				};
+
+				var appController = {
+					scores: [15,16,17,18,19,20],
+					avgScore: null,
+					avg: function () {
+						var sumOfScores = this.scores.reduce(function(prev, cur, index, array) {
+							return prev + cur;
+						});
+						this.avgScore = sumOfScores / this.scores.length;
+					}
+				};
+
+				appController.maxNum = function () {
+					this.avgScore = Math.max.apply(null, this.scores);
+				};
+
+				appController.maxNum.apply(gameController, gameController.scores);
+
+				expect(gameController.avgScore).toEqual(10);
+			});
+
+			
 			
 
 		});
