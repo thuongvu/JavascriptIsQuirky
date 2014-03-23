@@ -26,39 +26,55 @@ describe("This:", function() {
 	});
 
 	describe("Tricky uses of this:", function() {
-		it("In a method passed as a callback, use call/bind/apply for proper context", function() {
-			var user = {
-				name: "Charlie",
-				showName: function() {
-					return this.name;
-				}
-			};
-			function callShowName() {
-				user.showName();
-			};
-			expect(callShowName()).toBe(undefined);
-			
-			function bindShowName() {
-				user.showName.bind(user);
-			};
-			// bindShowName();
-			// console.log(bindShowName());
-// THIS DOESNT WORK, FIX LATER TODO		
+		describe("1.  Callbacks", function() {
+			it("In a method passed as a callback, use call/bind/apply for proper context", function() {
+				var user = {
+					name: "Charlie",
+					returnName: function() {
+						return this.name;
+					}
+				};
+				function callReturnName() {
+					user.returnName();
+				};
+				expect(callReturnName()).toBe(undefined);
+				
+				// var bindedUserReturnName = user.returnName.bind(user);
+				// function callBindedUserReturnName () {
+				// 	bindedUserReturnName();
+				// };
+				// function bindReturnName() {
+				// 	var binded = user.returnName.bind(user);
+				// 	binded();
+				// };
+				// console.log(callBindedUserReturnName());
+	// THIS DOESNT WORK, FIX LATER TODO		
+			});
 		});
+		describe("2. Inside Closures", function() {
+			it("A closure can't access the outer function's this var because this is accessible only by the function itself, not inner function");
+			it("Inside an anonymous function, set the this value to another variable before entering the method", function() {
+				var animals = {
+					data: [{species: 'Giraffe'}, {species: 'Elephant'}],
+					listOfSpecies: [],
+					logEachAnimal: function() {
+						var that = this; // we set the value of "this" to "that" variable, so we can use later
+						this.data.forEach(function(animal) {
+							that.listOfSpecies.push(animal.species);
+						});
+					}
+				};
+				var list = animals.listOfSpecies;
+				expect(list.length).toBe(0);
+				animals.logEachAnimal();
+				expect(list.length).toBe(2);
+			});
 
-		// it("Closures can't access the outer function's this variable because it is only accessible by the function itself, not inner functions", function() {
-		// 	var user = {
-		// 		data: [{name: "Delta"}, {name: "Emily"}],
-		// 		showName: function () {
-		// 			this.data.forEach(function(person) {
-		// 				console.log(this.name);
-		// 			});
-		// 		}
-		// 	};
 
-		// 	console.log(user.showName());
+		});
+		
 
-		// });
+
 
 	});
 	
