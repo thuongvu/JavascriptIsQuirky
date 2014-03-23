@@ -200,6 +200,25 @@ describe("Call, bind, apply:", function() {
 			expect(clientData.fullName).toMatch("Not set")
 			getUserInput("Thuongvu", "Ho", clientData.setName, clientData);
 			expect(clientData.fullName).toMatch("Thuongvu Ho")
+		});
+		describe("Borrowing functions with apply and call:", function() {
+			it("One can borrow Array.prototype methods using call", function() {
+				var arrayLikeObj = {0: "Frank", 1: 23, 2: 45, 3:["Georgia", "Henry"], length:4};
+
+				// borrowing the slice method from the Array prototype to use on arrayLikeObj
+				var newArray = Array.prototype.slice.call(arrayLikeObj, 0);
+				expect(newArray.length).toBe(4);
+
+				// indexOf
+				searchForFortyFive = Array.prototype.indexOf.call(arrayLikeObj, 45);
+				expect(searchForFortyFive).toBeGreaterThan(0);
+
+				//reverse
+				Array.prototype.reverse.call(arrayLikeObj);
+				expect(arrayLikeObj[0]).toMatch(["Georgia", "Henry"]);
+			});
+
+			
 
 		});
 
