@@ -283,30 +283,42 @@ describe("Call, bind, apply:", function() {
 				expect(gameController.avgScore).toEqual(10);
 			});
 
-			
-			
+			it("apply() can execute variable-arity functions, or functions with an array of arguments", function() {
+				// the aridy of a function specifies the number of arguments the function was defined to accept
 
+				// the Math.max() method accepts any number of arguments
+				var highestNumber = Math.max(23, 56, 21, 4, 62, 74);
+				expect(highestNumber).toEqual(74);
+
+				// we can't pass an array of numbers as an argument
+				var numbers = [3, 56, 6, 21, 53];
+
+				var highestNumberArrA = Math.max(numbers);
+				expect(highestNumberArrA).not.toEqual(56);
+				expect(highestNumberArrA).toEqual(NaN);
+
+				// we can use apply() to pass an array of numbers
+				var highestNumberArrB = Math.max.apply(null, numbers); //pass null as first argument because first argument of apply() sets this value
+				expect(highestNumberArrB).toEqual(56);
+			});
+
+			it("we can write our own variadic function using apply()", function() {
+
+				var animals = ["penguins", "giraffes", "elephants", "lions", "monkeys"];
+
+				function logAnimals() {
+					var args = Array.prototype.slice.call(arguments);
+					var lastAnimal = args.pop();
+					return "There are " + args.join(", ") + ", and " + lastAnimal + " in the zoo."
+				};
+				var allAnimals = logAnimals.apply(null, animals);
+
+				expect(allAnimals).toMatch("here are penguins, giraffes, elephants, lions, and monkeys in the zoo.");
+
+			});
+			
 		});
 
-
 	});
-	
-
 
 }); //call, bind, apply end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
