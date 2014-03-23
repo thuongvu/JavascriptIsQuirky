@@ -32,15 +32,33 @@ describe("Object Oriented Programming", function() {
 						expect(hero.identity).toBe("Clark Kent");
 					});
 
-					it("Setting [[Configurable]] to false does not allow property to be redefined, deleted, or changing property's attributes, or changing property into accessor", function() {
+					it("Setting [[Configurable]] to false does not allow property to be deleted, or changing property's attributes, or changing property into accessor", function() {
 						var voldemort = {};
 						Object.defineProperty(voldemort, "identity", {configurable: false, value: "Tom Riddle"});
 						expect(voldemort.identity).toMatch("Tom Riddle");
-					});
-				});
-				
 
+						// try to redefine property, expect it to throw an error
+						expect(function() {
+							Object.defineProperty(voldemort, "identity", {configurable: true, value: "Tom Riddle"});
+						}).toThrow(new TypeError("Cannot redefine property: identity"));
+
+
+						// then try to delete property, identity, but it still remains
+						delete voldemort.identity;
+						expect(voldemort.identity).toMatch("Tom Riddle");
+
+						// try to redefine property value
+						voldemort.identity = "Harry Potter";
+						expect(voldemort.identity).toMatch("Tom Riddle");
+
+					});
+					it("when you use Object.defineProperty() the values for configurable, enumerable, and writable then default to false automatically, unles you state otherwise");
+				});
 			}); // data properties end
+
+			describe("Accessor properties", function() {
+
+			}); // accessor properties end
 		
 		}); // type of properties end
 	}); //  objects end
