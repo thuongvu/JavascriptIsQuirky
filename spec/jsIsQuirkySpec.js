@@ -583,13 +583,14 @@ describe('Javascript: ', function() {
 					var bindedSayColor = sayColor.bind(obj); // a new function is created by calling bind() on sayColor, passing in obj
 					expect(bindedSayColor()).toMatch("blue"); // now, bindedSayColor has a this value of obj
 				});
- 
 			});
 
-		})
+		}) // function type end, i think
 
 		}); // array type end
 	}); // reference types end
+
+
 }); // Javascript end
 
 
