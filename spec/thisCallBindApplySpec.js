@@ -85,15 +85,35 @@ describe("This:", function() {
 				returnBindedCar();
 			});
 
+			describe("4. When borrowing methods", function() {
+				it("use call/apply", function() {
+					var gameController = {
+						scores: [1,2,3,4,5],
+						avgScore: null
+					};
+
+					var appController = {
+						scores: [10, 11, 12, 13, 14, 15],
+						avgScore: null,
+						avg: function() {
+							var sumOfScores = this.scores.reduce (function (prev, cur, index, array) {
+							   return prev + cur;
+						   });
+
+							this.avgScore = sumOfScores / this.scores.length;
+						}
+					};
+					appController.avg();
+					expect(appController.avgScore).toEqual(12.5);
+
+
+					// gameController object borrows appController's avg method
+					// the this value inside appController.avg method will be set to the gameController object
+					appController.avg.apply(gameController, gameController.scores);
+					expect(gameController.avgScore).toEqual(3);
+				});
+			});
 			
-
 		});
-		
-
-
-
 	}); // tricky uses of this end
-	
-
-
 }); // this end
