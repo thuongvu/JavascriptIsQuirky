@@ -127,64 +127,88 @@ describe("This:", function() {
 describe("Call, bind, apply:", function() {
 	describe("The bind() method", function() {
 		it("allows a developer to explicitly set a specific object to be bound to this when a function/method is invoked");
-	});
-
-	it("allows a developer to set the this value on methods", function() {
-// examples in previous section for this
-	});
-	it("allows a developer to borrow methods", function() {
-		var food = {
-			data: ['apple', 'banana']
-		};
-
-		var drinks = {
-			data: ['coke', 'pepsi'],
-			returnItems: function() {
-				return this.data;
-			}
-		};
-		expect(drinks.returnItems()).toMatch(['coke', 'pepsi']);
 		
-		expect(function() {
-			food.returnItems = drink.returnItems;
-		}).toThrow(new Error("drink is not defined"));
+			it("allows a developer to set the this value on methods", function() {
+		// examples in previous section for this
+			});
+			it("allows a developer to borrow methods", function() {
+				var food = {
+					data: ['apple', 'banana']
+				};
 
-		expect(food.returnItems).toBeUndefined();
-		food.returnItems = drinks.returnItems.bind(food);
-		expect(food.returnItems).toBeDefined();
+				var drinks = {
+					data: ['coke', 'pepsi'],
+					returnItems: function() {
+						return this.data;
+					}
+				};
+				expect(drinks.returnItems()).toMatch(['coke', 'pepsi']);
+				
+				expect(function() {
+					food.returnItems = drink.returnItems;
+				}).toThrow(new Error("drink is not defined"));
 
-		expect(food.returnItems()).toMatch(['apple', 'banana']);
+				expect(food.returnItems).toBeUndefined();
+				food.returnItems = drinks.returnItems.bind(food);
+				expect(food.returnItems).toBeDefined();
 
-	});
-	it("allows a developer to curry a function", function() {
-		// it is the use of a function that accepts one or more arguments to return a new function with some of the arguments already set
-		// the returned function has access to the arguments/variables of the outer function
+				expect(food.returnItems()).toMatch(['apple', 'banana']);
 
-		function greet(gender, age, name) {
-			if (gender === 'male') {
-				var salutation = "Mr. ";
-			} else if (gender === 'female') {
-				var salutaiton = "Ms. ";
+			});
+			it("allows a developer to curry a function", function() {
+				// it is the use of a function that accepts one or more arguments to return a new function with some of the arguments already set
+				// the returned function has access to the arguments/variables of the outer function
+
+				function greet(gender, age, name) {
+					if (gender === 'male') {
+						var salutation = "Mr. ";
+					} else if (gender === 'female') {
+						var salutaiton = "Ms. ";
+					};
+
+					if (age > 25) {
+						return "Hello, " + salutation + name + ".";
+					} else {
+						return "Hey, " + name + ".";
+					};
+				};
+
+				// let's use the bind method to curry, or preset one or more params of the greet functon
+				// first argument of bind is what to say 'this' to, which are aren't using right now
+				var greetAdultMale = greet.bind(null, "male", 45);
+				expect(greetAdultMale("Edward")).toMatch("Hello, Mr. Edward.");
+
+				var greetYoungFemale = greet.bind(null, "female", 20);
+				expect(greetYoungFemale("Faith")).toMatch("Hey, Faith.");
+			});
+	}); // bind end
+	
+	describe("Apply and Call", function() {
+		it("can be used to set the this value in callback functions", function() {
+			var clientData = {
+				fullName: "Not set",
+				setName: function(firstName, lastName) {
+						this.fullName = firstName + " " + lastName;
+				}
 			};
 
-			if (age > 25) {
-				return "Hello, " + salutation + name + ".";
-			} else {
-				return "Hey, " + name + ".";
+			function getUserInput(firstName, lastName, callbackFunction, callbackObjContext) {
+				// apply sets the this value to whatever we pass as callbackObj
+				callbackFunction.apply(callbackObjContext, [firstName, lastName]);
 			};
-		};
 
-		// let's use the bind method to curry, or preset one or more params of the greet functon
-		// first argument of bind is what to say 'this' to, which are aren't using right now
-		var greetAdultMale = greet.bind(null, "male", 45);
-		expect(greetAdultMale("Edward")).toMatch("Hello, Mr. Edward.");
+			expect(clientData.fullName).toMatch("Not set")
+			getUserInput("Thuongvu", "Ho", clientData.setName, clientData);
+			expect(clientData.fullName).toMatch("Thuongvu Ho")
 
-		var greetYoungFemale = greet.bind(null, "female", 20);
-		expect(greetYoungFemale("Faith")).toMatch("Hey, Faith.");
+		});
+
+
 	});
+	
 
 
-});
+}); //call, bind, apply end
 
 
 
