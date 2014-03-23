@@ -521,16 +521,17 @@ describe('Javascript: ', function() {
 
 				it("Prototype property where all the instance methods and references types exist and are accessed from");
 
-
-				function add(num1, num2) {
-					return num1 + num2;
-				};
-
 				it("the apply() method which calls a function with a specific this value, accepts two arguments: value of this, and array of arguments", function() {
+					function add(num1, num2) {
+						return num1 + num2;
+					};
 					expect(add.apply(this, [1,2])).toEqual(3);
 				});
 
 				it("The apply() method can accept 1. this (value of this object inside function body) and 2. arguments object", function() {
+					function add(num1, num2) {
+						return num1 + num2;
+					};
 					function applyAddWithArgumentsObj(num1, num2) { // passing in the arguments object
 						return add.apply(this, arguments);
 					};
@@ -538,6 +539,9 @@ describe('Javascript: ', function() {
 				});
 
 				it("The apply() method can accept 1. this(value of object inside function body, and 2. an array of arguments", function() {
+					function add(num1, num2) {
+						return num1 + num2;
+					};
 					function applyAddWithArray(num1, num2) {
 						return add.apply(this, [num1, num2]);
 					};
@@ -545,12 +549,39 @@ describe('Javascript: ', function() {
 				});
 
 				it("The call() method accepts 1. this value, and 2. arguments passed directly into the function", function() {
+					function add(num1, num2) {
+						return num1 + num2;
+					};
 					function callAdd(num1, num2) {
 						return add.call(this, num1, num2);
 					};
-
 					expect(callAdd(1,2)).toEqual(3);
+				});
 
+				it("call() and apply() can be used to call a function in context of a specific object", function() {
+					window.color = "red";
+					var obj = {color: "blue"};
+
+					function sayColor() {
+						return this.color;
+					};
+
+					expect(sayColor()).toMatch("red");
+					// switch the context of the function so that 'this' points to obj
+					expect(sayColor.call(obj)).toMatch("blue"); 
+					expect(sayColor.apply(obj)).toMatch("blue");
+				});
+
+				it("bind() creates a new function instance with a this value bound to the value passed into bind", function() {
+					window.color = "red";
+					var obj = {color: "blue"};
+
+					function sayColor() {
+						return this.color;
+					};
+
+					var bindedSayColor = sayColor.bind(obj); // a new function is created by calling bind() on sayColor, passing in obj
+					expect(bindedSayColor()).toMatch("blue"); // now, bindedSayColor has a this value of obj
 				});
  
 			});
