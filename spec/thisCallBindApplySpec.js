@@ -28,14 +28,15 @@ describe("This:", function() {
 	describe("Tricky uses of this:", function() {
 		describe("1.  Callbacks", function() {
 			it("In a method passed as a callback, use call/bind/apply for proper context", function() {
-				var user = {
+				var nameObj = {
 					name: "Charlie",
 					returnName: function() {
+						// console.log(this.name);
 						return this.name;
 					}
 				};
 				function callReturnName() {
-					user.returnName();
+					nameObj.returnName();
 				};
 				expect(callReturnName()).toBe(undefined);
 
@@ -43,10 +44,14 @@ describe("This:", function() {
 					// do something else...
 					callback();
 				};
+				// console.log(nameObj.returnName.call(nameObj));
+				nameObj.returnName.call(nameObj)
+				var boundReturnName = nameObj.returnName.bind(nameObj);
+				// console.log(boundReturnName());
 
-				// console.log(invokeCallback(user.returnName));
-				// console.log(invokeCallback(user.returnName.bind(user)));
-	// THIS DOESNT WORK, FIX LATER TODO		
+				// invokeCallback(boundReturnName);
+			
+// THIS DOESNT WORK, FIX LATER TODO		
 			});
 		});
 		describe("2. Inside Closures:", function() {
@@ -113,7 +118,86 @@ describe("This:", function() {
 					expect(gameController.avgScore).toEqual(3);
 				});
 			});
-			
+
 		});
 	}); // tricky uses of this end
 }); // this end
+
+
+describe("Call, bind, apply:", function() {
+	describe("The bind() method", function() {
+		it("allows a developer to explicitly set a specific object to be bound to this when a function/method is invoked");
+	});
+
+	it("allows a developer to set the this value on methods", function() {
+// examples in previous section for this
+	});
+	it("allows a developer to borrow methods", function() {
+		var food = {
+			data: ['apple', 'banana']
+		};
+
+		var drinks = {
+			data: ['coke', 'pepsi'],
+			returnItems: function() {
+				return this.data;
+			}
+		};
+		expect(drinks.returnItems()).toMatch(['coke', 'pepsi']);
+		
+		expect(function() {
+			food.returnItems = drink.returnItems;
+		}).toThrow(new Error("drink is not defined"));
+
+		expect(food.returnItems).toBeUndefined();
+		food.returnItems = drinks.returnItems.bind(food);
+		expect(food.returnItems).toBeDefined();
+
+		expect(food.returnItems()).toMatch(['apple', 'banana']);
+
+	});
+	it("allows a developer to curry a function", function() {
+		// it is the use of a function that accepts one or more arguments to return a new function with some of the arguments already set
+		// the returned function has access to the arguments/variables of the outer function
+
+		function greet(gender, age, name) {
+			if (gender === 'male') {
+				var salutation = "Mr. ";
+			} else if (gender === 'female') {
+				var salutaiton = "Ms. ";
+			};
+
+			if (age > 25) {
+				return "Hello, " + salutation + name + ".";
+			} else {
+				return "Hey, " + name + ".";
+			};
+		};
+
+		// let's use the bind method to curry, or preset one or more params of the greet functon
+		// first argument of bind is what to say 'this' to, which are aren't using right now
+		var greetAdultMale = greet.bind(null, "male", 45);
+		expect(greetAdultMale("Edward")).toMatch("Hello, Mr. Edward.");
+
+		var greetYoungFemale = greet.bind(null, "female", 20);
+		expect(greetYoungFemale("Faith")).toMatch("Hey, Faith.");
+	});
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
