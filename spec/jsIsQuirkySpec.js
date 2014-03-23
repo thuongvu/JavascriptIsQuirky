@@ -513,18 +513,51 @@ describe('Javascript: ', function() {
 					});
 				});
 			});
-			describe("Function properties and methods", function() {
+			describe("Function properties and methods: Each function has a ", function() {
+				it("Length property that indicates number of named arguments that it expects", function() {
+					function add(num1, num2) {};
+					expect(add.length).toEqual(2);
+				});
 
+				it("Prototype property where all the instance methods and references types exist and are accessed from");
+
+
+				function add(num1, num2) {
+					return num1 + num2;
+				};
+
+				it("the apply() method which calls a function with a specific this value, accepts two arguments: value of this, and array of arguments", function() {
+					expect(add.apply(this, [1,2])).toEqual(3);
+				});
+
+				it("The apply() method can accept 1. this (value of this object inside function body) and 2. arguments object", function() {
+					function applyAddWithArgumentsObj(num1, num2) { // passing in the arguments object
+						return add.apply(this, arguments);
+					};
+					expect(applyAddWithArgumentsObj(1,2)).toEqual(3);
+				});
+
+				it("The apply() method can accept 1. this(value of object inside function body, and 2. an array of arguments", function() {
+					function applyAddWithArray(num1, num2) {
+						return add.apply(this, [num1, num2]);
+					};
+					expect(applyAddWithArray(1,2)).toEqual(3);
+				});
+
+				it("The call() method accepts 1. this value, and 2. arguments passed directly into the function", function() {
+					function callAdd(num1, num2) {
+						return add.call(this, num1, num2);
+					};
+
+					expect(callAdd(1,2)).toEqual(3);
+
+				});
+ 
 			});
 
 		})
 
 		}); // array type end
-
-
-
-
-
 	}); // reference types end
 }); // Javascript end
 
