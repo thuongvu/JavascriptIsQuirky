@@ -183,5 +183,53 @@ describe("Objects", function() {
 		}); // accessor properties end
 	
 	}); // type of properties end
+
+	describe("Own and Inherited Properties", function() {
+		it("To find out if a property exists on an object, either inherited or own, use the IN operator", function() {
+			var food = {fruit:"banana"};
+
+			// own properties
+			var isFruitInFood = "fruit" in food;
+			expect(isFruitInFood).toBe(true);
+
+			var isVegetableInFood = "vegetable" in food;
+			expect(isVegetableInFood).toBe(false);
+
+			// inherited properties
+			var isTooStringInFood = "toString" in food;
+			expect(isTooStringInFood).toBe(true);
+		});
+
+		it("To find out whether an object has a property as one of its own property, and not inherited ones, use hasOwnProperty() method", function() {
+			var food = {fruit:"banana"};
+
+			// fruit is a property on food
+			var isFruitOwnProperty = food.hasOwnProperty("fruit");
+			expect(isFruitOwnProperty).toBe(true);
+
+			// toString is an inherited property, so hasOwnProperty will return false
+			var isTooStringOwnProperty = food.hasOwnProperty("toString");
+			expect(isTooStringOwnProperty).toBe(false);
+		});
+		
+		it("To access enumerable (own and inherited) properties on objects, use the for/in loop", function() {
+			var food = {
+				fruit:"banana",
+				healthy: true,
+				color: "yellow"
+			}; 
+
+			var foodProperties = [];
+			expect(foodProperties.length).toEqual(0);
+
+			for (var property in food) {
+				foodProperties.push(property);
+			};
+
+			expect(foodProperties.length).toEqual(3);
+
+		});
+
+	}); //own and inherited properties end
 }); //  objects end
 
