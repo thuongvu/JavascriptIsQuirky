@@ -305,7 +305,51 @@ describe("OOP", function() {
 
 		});
 		describe("Dynamic nature of protoypes", function() {
-			
+			it("Changes made to the prototype are immediately reflected on instances, even if the instance eisted before the change was made", function() {
+				// The instance is first searched for the property, and when it's not found on the instance, it goes up the chain to the prototype. 
+				// Since the link between the instance and prototype is a pointer, not a copy, the search finds the proeprty on the prototype and returns the function stored there
+				function Animal() {};
+
+				Animal.prototype.species = "Rhino";
+				Animal.prototype.saySpecies = function() {
+					return this.species;
+				};
+
+				var rhino = new Animal();
+				
+				var prototypeOfRhino = rhino.__proto__;
+				expect(prototypeOfRhino.species).toBe("Rhino");
+				expect(rhino.species).toBe("Rhino");
+
+			});
+
+			it("But if you overwrite the entire prototype, you sever the tie between constructor and original prototype", function() {
+				function Animal() {};
+
+				var rhino = new Animal();
+
+				// we overwrote the prototype
+				Animal.prototype = {
+					species: "Rhino",
+					legs: 4,
+					saySpecies: function() {
+						return this.species;
+					}
+				};
+
+				// rhino's prototype points to the old prototype, with no properties on it
+				var prototypeOfRhino = rhino.__proto__;
+				expect(prototypeOfRhino.species).toBe(undefined);
+				expect(rhino.species).toBe(undefined);
+
+				// make a new instance of Animal();
+				var rhino2 = new Animal();
+				var prototypeOfRhino2 = rhino2.__proto__;
+				expect(prototypeOfRhino2.species).toBe("Rhino");
+				expect(rhino2.species).toBe("Rhino");
+
+			});
+
 		});
 		describe("Problems with prototypes", function() {
 
