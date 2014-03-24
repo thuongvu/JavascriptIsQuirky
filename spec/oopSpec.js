@@ -234,10 +234,78 @@ describe("OOP", function() {
 
 		});
 		describe("Alternate Prototype Syntax", function() {
+			it("One can overwrite the prototype with an object literal that contains properties and methods instead of each method one by one", function() {
+				function Animal() {};
+				Animal.prototype = {
+					species: "Rhino",
+					legs: 4,
+					saySpecies: function() {
+						return this.species;
+					}
+				};
+				
+				var rhino1 = new Animal();
+				expect(rhino1.species).toBe("Rhino");
+			});
+			it("By doing so, the constructor property over the prototype is overwritten, pointing to a different, new object", function() {
+				function Animal() {};
+				Animal.prototype = {
+					species: "Rhino",
+					legs: 4,
+					saySpecies: function() {
+						return this.species;
+					}
+				};
+				
+				var rhino1 = new Animal();
+				// the instanceof operator still works reliably.
+				expect(rhino1 instanceof Object).toBe(true);
+				expect(rhino1 instanceof Animal).toBe(true);
+
+				// but the constructor doesn't indicate the type of object
+				// we overwrote the prototype's constructor, which points back to the function on which it is a property
+				expect(rhino1.constructor == Object).toBe(true);
+				expect(rhino1.constructor == Animal).toBe(false);
+
+			});
+			it("We can set the constructor's value within the object literal, but this causes the constructor to be enumerable, not normal", function() {
+				function Animal() {};
+				Animal.prototype = {
+					constructor: Animal,
+					species: "Rhino",
+					legs: 4,
+					saySpecies: function() {
+						return this.species;
+					}
+				};
+				
+				var rhino1 = new Animal();
+
+				expect(Animal.prototype.propertyIsEnumerable('constructor')).toBe(true);
+			});
+			it("We can use Object.defineProperty, passing in the prototype, and the constructor property, and set enumerable to false", function() {
+				function Animal() {};
+				Animal.prototype = {
+					species: "Rhino",
+					legs: 4,
+					saySpecies: function() {
+						return this.species;
+					}
+				};
+
+				Object.defineProperty(Animal.prototype, "constructor", {
+					enumerable: false,
+					value: Animal
+				});
+				
+				var rhino1 = new Animal();
+
+				expect(Animal.prototype.propertyIsEnumerable('constructor')).toBe(false);
+			});
 
 		});
 		describe("Dynamic nature of protoypes", function() {
-
+			
 		});
 		describe("Problems with prototypes", function() {
 
