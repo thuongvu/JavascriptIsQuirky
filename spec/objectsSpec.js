@@ -316,7 +316,27 @@ describe("Objects", function() {
 
 		}); // delete end
 	}); //own and inherited properties end
-	
+	describe("Serialize and Deserialize Objects", function() {
+		it("To serialize an object, use JSON.stringify", function() {
+			var fruits = {
+				apple: "red",
+				banana: "yellow",
+				kiwi: "green"
+			};
+			expect(typeof fruits).toBe("object");
+
+			var fruitsStringified = JSON.stringify(fruits);
+			expect(typeof fruitsStringified).toBe("string");
+		});
+
+		it("To deserialize an object, use JSON.parse", function() {
+			var fruitString = '{"apple":"red","banana":"yellow","kiwi":"green"}';
+			expect(typeof fruitString).toBe("string");
+
+			var fruitObj = JSON.parse(fruitString);
+			expect(typeof fruitObj).toBe("object");
+		});
+	}); // serialize and deserialize end
 }); //  objects end
 
 
