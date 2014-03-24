@@ -408,15 +408,60 @@ describe("OOP", function() {
 	
 	 });
 
-	 describe("Dynamic Prototype Pattern/// TO DO", function() {
+	 describe("Dynamic Prototype Pattern/// SKIP", function() {
 
 	 });
 
 	 describe("Parasitic Constructor Pattern", function() {
+	 	it("creates a constructor that wraps the creation and return of another object, while looking like a typical constructor", function() {
+	 		function Animal(species, legs) {
+	 			var o = new Object();
+	 			o.species = species;
+	 			o.legs = legs;
+	 			o.saySpecies = function() {
+	 				return this.species;
+	 			};
+	 			return o;
+	 		};
+
+	 		var buffalo = new Animal("buffalo", 4);
+	 		expect(buffalo.saySpecies()).toBe("buffalo");
+	 	});
+	 	it("is used to create constructors for objects that may not be possible otherwise", function() {
+	 		// for example, usually we can't get direct access to the Array constructor
+	 		// but we want to create a special array that has an extra method
+	 		function SpecialArray() {
+	 			// create array;
+	 			var values = new Array();
+
+	 			// add values
+	 			// we're borrowing the push method, from Array, but since values is an instance of array, we only need to explicitly set the context to values
+	 			// a new array is created an initialized using the push() method, which has all the constructor arguments passed to it
+	 			// we are pushing everything from the arguments with apply, which takes a context object, and an array
+	 			values.push.apply(values, arguments);
+
+
+	 			// i just tried for (var i = 0; i < array.length; i++) { values.push(arguments[i])}
+	 			// but using an apply makes much more sense when its with the arguments object
+
+	 			// assign method
+	 			values.toPipedString = function() {
+	 				return this.join("|");
+	 			};
+
+	 			// return it
+	 			return values;
+	 		};
+	 		var colors = new SpecialArray("red", "blue", "green");
+	 		expect(colors.toPipedString()).toMatch("red|blue|green");
+	 	});
+		it("But there is no relationship between the returned object and constructor/constructor's prototype");
+		it("Therefore there are problems of object identification - it's as if the object was created outside of a constructor");
+
 
 	 });
 
-	 describe("Durable Constructor Pattern", function() {
+	 describe("Durable Constructor Pattern // SKIP", function() {
 
 	 });
 
