@@ -604,8 +604,89 @@ describe("OOP", function() {
 	 		
 	 	}); //prototype chaining end
 	 	describe("Constructor Stealing", function() {
+	 		describe("The basic idea is to use call() or apply() from the supertype constructor within the subtype constructor, setting a new context object for properties/methods", function() {});
+	 		describe("As functions are objects that execute code in a particular context, call and apply can change that context to execute a constructor in the context of a newly created object", function (){});
+	 		it("Implementing constructor stealing", function() {
+	 			function SuperType() {
+	 				this.colors = ["red", "blue", "green"];
+	 			};
+
+	 			function SubType() {
+	 				// inherit from SuperType
+	 				// SuperType constructor is calledin the context of the newly created instance of SubType
+	 				// we are setting the this, context object of SuperType function to SubType's this
+	 				SuperType.call(this);
+	 			};
+
+	 			var instance = new SubType();
+	 			instance.colors.push("black");
+
+	 			var instance2 = new SubType();
+	 			expect(instance2.colors == instance.colors).toBe(false);
+
+	 		});
+	 		it("You can pass arguments into the supertype constructor using constructor stealing, which prototype chaining does not offer", function() {
+	 			// accepts a single argument name, which is assigned to a property
+	 			function SuperType(name) { 
+	 				this.name = name;
+	 			};
+
+	 			function SubType() {
+	 				// inherit from SuperType by passing in argument, setting the name property for the SubType instance
+	 				SuperType.call(this, "Thuongvu");
+
+	 				// instance property
+	 				this.age = 22;
+	 			};
+
+	 			var instance = new SubType();
+	 			expect(instance.name).toBe("Thuongvu");
+	 			expect(instance.age).toBe(22);
+	 		});
+
+	 		describe("The problem with constructor stealing is that methods must be defined inside the constructor, so no function reuse", function() {});
+	 		describe("Methods defined on the supertype's prototype are not accessible on the subtype, so all types can use only the constructor pattern", function() {});
 
 	 	}); // constructor stealing end
+		describe("Combination Inheritance/pseudoclassical inheritance", function() {
+			it("Use prototype chaining to inherit properties and methods on the prototype, and use constructor stealing to inherit instance properties", function() {
+				// constructor defines two proeprties, name, and colors
+				function SuperType(name) {
+					this.name = name;
+					this.colors = ["red", "blue", "green"];
+				};
+				
+				// prototype defines a method alled sayName()
+				SuperType.prototype.sayName = function() {
+					return this.name;
+				};
+				
+				function SubType(name, age) {
+					// inherit properties 
+					SuperType.call(this, name);
+					this.age = age;
+				};
+
+				// inherit methods
+				SubType.prototype = new SuperType();
+
+				SubType.prototype.sayAge = function() {
+					return this.age;
+				};
+
+				var instance = new SubType("Thuongvu", 22);
+				instance.colors.push("black");
+				expect(instance.sayName()).toBe("Thuongvu");
+				expect(instance.sayAge()).toEqual(22);
+				expect(instance.colors).toMatch(["red", "blue", "green", "black"]);
+
+				var instance2 = new SubType("Esta", 23);
+				expect(instance2.sayName()).toBe("Esta");
+				expect(instance2.sayAge()).toEqual(23);
+				expect(instance2.colors).toMatch(["red", "blue", "green"]);
+			});
+
+		}); //combination inheritance
 	 	describe("Prototypal Inheritance", function() {
 
 	 	});
