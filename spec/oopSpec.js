@@ -180,6 +180,60 @@ describe("OOP", function() {
 			});
 		});
 		describe("Prototypes and the in operator", function() {
+			function Animal() {};
+
+			Animal.prototype.species = "Rhino";
+			Animal.prototype.legs = 4;
+			Animal.prototype.saySpecies = function() {
+				return this.species;
+			};
+			var rhino1 = new Animal();
+			var rhino2 = new Animal();
+			rhino2.species = "Blue Rhino";
+
+
+			it("The in operator returns true as long as the property is accessible by the object, whether on the prototype or instance", function() {
+				expect("species" in rhino1).toBe(true);
+				expect("species" in rhino2).toBe(true);
+			});
+			it("A prototype property can be determined if the in operator returns true, but hasOwnProperty returns false", function() {
+				function hasPrototypeProperty(object, property) {
+					return !object.asOwnProperty(property) && (property in object);
+					// if the object DOESN'T have the property as an instance property, but the property is accesible to the object, it must be a prototype property
+				expect(hasPrototypeProperty(rhino1, "species")).toBe(true);
+				expect(hasPrototypeProperty(rhino2, "species")).toBe(false);
+				};
+			});
+			it("To retrieve a list of all enumerable instance properties on an object, use the Object.keys() method", function() {
+				// it accepts an object as its argument and returns an array of strings containing names of all enumerable properties... in this case, directly on a prototype
+				var keysOfAnimalPrototype = Object.keys(Animal.prototype);
+				expect(keysOfAnimalPrototype).toMatch(["species", "legs", "saySpecies"]);
+			});
+
+			it("You can also use the Object.keys() method to retrieve enumerable properties on an instance", function() {
+				var keysOfRhino2Prototype = Object.keys(rhino2);
+				expect(keysOfRhino2Prototype).toMatch(["species"]);
+				// it is different than a for/in because it only returns an array of elements of enumerable properties found directly on the object
+			});
+
+			it("A for/in will return a list of enumerable proeprties, both on instance, and on the prototype, only requirement being enumerable ", function() {
+				var propertiesInRhino2 = [];
+				for (var property in rhino2) {
+					propertiesInRhino2.push(property);
+				};
+				expect(propertiesInRhino2).toMatch(["species", "legs", "saySpecies"]);
+			});
+
+			it("To retrieve a list of all instance properties, whether enumerable or not, use Object.getOwnProperties()", function() {
+				var keysOfAnimalPrototype = Object.getOwnPropertyNames(Animal.prototype);
+				expect(keysOfAnimalPrototype).toMatch(["constructor", "species", "legs", "saySpecies"]); // note that we get back the non-enumerable "constructor"
+
+				var keysOfRhino2 = Object.getOwnPropertyNames(rhino2);
+				expect(keysOfRhino2).toMatch(["species"]);
+			});
+
+		});
+		describe("Alternate Prototype Syntax", function() {
 
 		});
 		describe("Dynamic nature of protoypes", function() {
