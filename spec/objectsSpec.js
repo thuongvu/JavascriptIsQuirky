@@ -256,25 +256,67 @@ describe("Objects", function() {
 		});
 
 		describe("Deleting Properties", function() {
-			it("You can delete properties from an object using the delete operator", function() {
+			// var MilkyWay = {
+			function MilkyWay() {
+				this.existsInUniverse = true;
+				this.pluto = 10000;
+			}
 				
+			// }
+
+			var solarSystem = new MilkyWay();
+			solarSystem.mercury = 1;
+			solarSystem.venus = 2;
+			solarSystem.earth = 3;
+			solarSystem.mars = 4;
+			solarSystem.jupiter = 5;
+			solarSystem.saturn = 6;
+			solarSystem.neptune=  7
+			solarSystem.pluto = 8; // this pluto property overwrites the one that is written by the constructr function
+
+			it("You can delete properties from an object using the delete operator", function() {
+				expect(solarSystem.pluto).toBe(8);
+				delete solarSystem.pluto;
+				expect(solarSystem.pluto).toBe(undefined);
+
+				// pluto is still there on the prototype because we only deleted it from the solarSystem instance				
+				var newSolarSystem = new MilkyWay();
+				expect(newSolarSystem.pluto).toBe(10000);
+			
 			});
 
 			it("You can't delete properties that were inherited", function() {
-
-			});
-
-			it("You can't delete properties that were set to configurable", function() {
-
+				expect(solarSystem.toString).toBeDefined();
+				delete solarSystem.toString();
+				expect(solarSystem.toString).toBeDefined();
 			});
 
 			it("You must delete inherited properties on the prototype object, where the properties were defined", function() {
+				expect(solarSystem.isHuge).toBeUndefined();
+				// defining a prototype on the MilkyWay function (constructor)
+				MilkyWay.prototype.isHuge = true;
+
+				// now isHuge property should be on the inherited solarSystem
+				expect(solarSystem.isHuge).toBeDefined();
+				expect(solarSystem.isHuge).toBe(true);
+
+				//isHuge is not an own property of the solarSystem instance
+				expect(solarSystem.hasOwnProperty("isHuge")).toBe(false);
+
+				// let's try to delete the inherited isHuge property
+				delete solarSystem.isHuge;
+				expect(solarSystem.isHuge).toBeDefined();
+				expect(solarSystem.isHuge).toBe(true);
+
+				// It was not deleted.  We must delete it from the prototype itself
+				delete MilkyWay.prototype.isHuge;
+				expect(solarSystem.isHuge).toBeUndefined();
 
 			});
 
 		}); // delete end
-
 	}); //own and inherited properties end
+	
 }); //  objects end
 
 
