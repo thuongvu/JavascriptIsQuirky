@@ -342,7 +342,7 @@ describe("OOP", function() {
 				expect(prototypeOfRhino.species).toBe(undefined);
 				expect(rhino.species).toBe(undefined);
 
-				// make a new instance of Animal();
+				// make a new instance of Animal(); and points to the new prototype
 				var rhino2 = new Animal();
 				var prototypeOfRhino2 = rhino2.__proto__;
 				expect(prototypeOfRhino2.species).toBe("Rhino");
@@ -351,11 +351,74 @@ describe("OOP", function() {
 			});
 
 		});
-		describe("Problems with prototypes", function() {
+		
+		describe("Native object properties", function() {
+			it("You can access methods of native reference types like Array or String by prototype");
+			it("You can also change them, but it creates name collision sif a method that didnt exist natively in one browser is implemented natively in another, or accidentally overwrite native methods");
+		});
 
+		describe("Problems with prototypes", function() {
+			it("You can't pass initialization arguments into the constructor, meaning all instances get the same property");
+			it("Properties that contain reference values are problematic", function() {
+				function Animal() {};
+
+				Animal.prototype = {
+					species: "Rhino",
+					legs: 4,
+					saySpecies: function() {
+						return this.species;
+					},
+					habitats: ["Africa", "Asia"]
+				};
+				var rhino = new Animal();
+				var rhino2 = new Animal();
+
+				rhino.habitats.push("Middle East");
+
+				//because habitats array exists on Animal.prototype and not on the the rhino instance, these changes point to the same array of rhino2
+				expect(rhino.habitats).toMatch(["Africa", "Asia", "Middle East"]);
+				expect(rhino2.habitats).toMatch(["Africa", "Asia", "Middle East"]);
+
+			});
 		});
 	}); // prototype pattern end
- 
+	 describe("Combination Constructor/Prototype Pattern", function() {
+
+	 });
+
+	 describe("Dynamic Prototype Pattern", function() {
+
+	 });
+
+	 describe("Parasitic Constructor Pattern", function() {
+
+	 });
+
+	 describe("Durable Constructor Pattern", function() {
+
+	 });
+
+	 describe("Inheritance", function() {
+	 	describe("Prototype Chaining", function() {
+	 		it("Default prototypes", function() {
+
+	 		});
+	 		it("Prototype and instance relationships", function() {
+
+	 		});
+	 		it("Working with Methods", function() {
+
+	 		});
+	 		it("Problems with Prototype Chaining", function() {
+
+	 		});
+	 		
+	 	}); //prototype chainign end
+	 	describe("Constructor Stealing", function() {
+
+	 	}); // constructor stealing end
+
+	 }); //inheritance end
 }); // oop end
 
 
