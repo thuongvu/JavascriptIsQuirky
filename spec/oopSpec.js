@@ -114,8 +114,70 @@ describe("OOP", function() {
 	}); //constructor pattern end
 
 	describe("prototype pattern", function() {
-		describe("How prototypes Work", function() {
+		describe("How prototypes work", function() {
+			it("each function is created with a prototype property, which is an object containing properties and methods available for each particular reference type");
+			it("Benefit: all properties and methods are shared among object instances on the prototype");
+			
+			function Animal() {};
 
+			Animal.prototype.species = "Rhino";
+			Animal.prototype.legs = 4;
+			Animal.prototype.saySpecies = function() {
+				return this.species;
+			};
+			var rhino1 = new Animal();
+			var rhino2 = new Animal();
+			it("Instead of assigning object information in the constructor, they can be assigned directly to the prototype", function (){
+				
+				
+				expect(rhino1.saySpecies()).toBe("Rhino");
+				expect(rhino2.saySpecies()).toBe("Rhino");
+
+				expect(rhino1.saySpecies == rhino2.saySpecies).toBe(true);
+
+				
+			});
+
+			it("Prototypes automatically get a property called constructor that points back to the function on which it is a property", function() {
+				expect(Animal.prototype.constructor).toBe(Animal);
+			});
+
+			it("Each time a constructor is called to create a new instance, the instance has an internal pointer to the constructor's prototype, __proto__", function() {
+				// var rhino1 = new Animal();
+				expect(rhino1.__proto__).toBe(Animal.prototype);
+			});
+			it("There is a direct link between instance the constructor's PROTOTYPE, but not between the instance and constructor");
+			it("The isPrototypeOf() method returns true if the [[Prototype]] points to the prototype on which the method is being called", function() {
+				expect(Animal.prototype.isPrototypeOf(rhino1)).toBe(true);
+			});
+			it("The Object.getPrototypeOf() method returns the value of [[Prototype]]", function() {
+				expect(Object.getPrototypeOf(rhino1)).toBe(Animal.prototype);
+			});
+
+			it("Using Object.getPrototypeOf() allows you to retrieve an object's prototype as well as any properties and methods on that prototype", function() {
+				expect(Object.getPrototypeOf(rhino1).species).toBe("Rhino");
+			});
+
+			it("If you add a property to the instance that has the same name as the property on the prototype, it will return the one on the instance, due to lookups", function() {
+				expect(rhino1.species).toMatch("Rhino");
+				expect(rhino1.hasOwnProperty("species")).toBe(false); // rhino1 does not have its own property
+
+				// changing the property on the local instance
+				rhino1.species = "Black Rhino";
+				expect(rhino1.species).toMatch("Black Rhino"); // from instance
+				expect(rhino1.hasOwnProperty("species")).toBe(true); // now rhino1. has its own species property on the instance
+
+				// changing the species property on the instance does not affect it on the prototype
+				expect(Animal.prototype.species).toMatch("Rhino");
+			});
+			it("You have to delete the property that was set on the instance in order to restore te link to the prototype's property of the same name", function() {
+				rhino1.species = "Black Rhino";
+				expect(rhino1.hasOwnProperty("species")).toBe(true);
+
+				delete rhino1.species;
+				expect(rhino1.hasOwnProperty("species")).toBe(false);
+				expect(rhino1.species).toBe("Rhino");
+			});
 		});
 		describe("Prototypes and the in operator", function() {
 
@@ -129,3 +191,21 @@ describe("OOP", function() {
 	}); // prototype pattern end
  
 }); // oop end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
