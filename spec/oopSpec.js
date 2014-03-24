@@ -467,12 +467,71 @@ describe("OOP", function() {
 
 	 describe("Inheritance", function() {
 	 	describe("Prototype Chaining", function() {
-	 		it("Default prototypes", function() {
+	 		describe("Remember that each constructor has a prototype oject that points back to the constructor, and instances have a pointer to the prototype", function() {});
+	 		describe("What if the prototype were actually an instance of another type, pointing to a different prototype, that in turns, have a pointer to another constructor", function() {});
+	 		describe("If the prototype were an instance of another type, this pattern could create a chain between instances and prototypes", function() {});
+	 		it("Implementing a prototype chain", function() {
+	 			function SuperType() {
+	 				this.property = true;
+	 			};
+	 			SuperType.prototype.getSuperValue = function() {
+	 				return this.property;
+	 			};
+	 			function SubType() { 
+	 				this.subproperty = false;
+	 			};
+	 			//inherits from SuperType by creating a new instance and assinign it to SubType.prototype
+	 			// this overwrites the original prototype and replaces it with a new object
+	 			// all the properties and methods that typically exist on an instance of SuperType now also eist on SubType.prototype
+	 			SubType.prototype = new SuperType();
 
-	 		});
-	 		it("Prototype and instance relationships", function() {
+	 			expect(SubType.prototype.constructor).toBe(SuperType)
+	 			 // the new prototype is an instance of SuperType and it not only gets proeprties and methods of a SuperType instance but also points to the SuperType's prototype
+	 			
+	 			SubType.prototype.getSubValue = function() {
+	 				return this.subproperty;
+	 			};
+	 			var instance = new SubType();
+	 			expect(instance.getSuperValue()).toBe(true); // accessing the this.property from the SuperType prototype
+	 		describe("Prototype and instance relationships", function() {
+	 			function SuperType() {
+	 				this.property = true;
+	 			};
+	 			SuperType.prototype.getSuperValue = function() {
+	 				return this.property;
+	 			};
+	 			function SubType() { 
+	 				this.subproperty = false;
+	 			};
+	 			function SubType() { 
+	 				this.subproperty = false;
+	 			};
+	 			SubType.prototype.getSubValue = function() {
+	 				return this.subproperty;
+	 			};
+	 			var instance = new SubType();
 
+	 			it("The instanceof operator returns true whenever an instance is used with a constructor that appears in its prototype chain", function() {
+	 				expect(instance instanceof Object).toBe(true);
+	 				expect(instance instanceof SuperType).toBe(true);
+	 				expect(instance instanceof SubType).toBe(true);
+	 				// these are all true because of the prototype chain relationship
+	 				// the SubType prototype points to the SuperType prototype, which has a constructor of SuperType, and a constructor of Object, therefore this is all true
+	 			});
+
+	 			it("The isPrototypeOf() method returns true for an instance in the chain", function() {
+	 				expect(Object.prototyope.isPrototypeOf(instance)).toBe(true);
+	 				expect(SuperType.prototyope.isPrototypeOf(instance)).toBe(true);
+	 				expect(SubType.prototyope.isPrototypeOf(instance)).toBe(true);
+	 				// each prototype in the chain has access to this method, which returns true for an instance in the chain
+
+
+	 			});
+	 			
 	 		});
+	 	});
+
+	 		
 	 		it("Working with Methods", function() {
 
 	 		});
