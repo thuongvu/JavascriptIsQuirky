@@ -655,12 +655,12 @@ describe("OOP", function() {
 					this.name = name;
 					this.colors = ["red", "blue", "green"];
 				};
-				
+
 				// prototype defines a method alled sayName()
 				SuperType.prototype.sayName = function() {
 					return this.name;
 				};
-				
+
 				function SubType(name, age) {
 					// inherit properties 
 					SuperType.call(this, name);
@@ -686,8 +686,77 @@ describe("OOP", function() {
 				expect(instance2.colors).toMatch(["red", "blue", "green"]);
 			});
 
-		}); //combination inheritance
+		}); //combination inheritance end
 	 	describe("Prototypal Inheritance", function() {
+	 		function object(o) {
+	 			function F() {}; // 1
+	 			F.prototype = o; // 2
+	 			return new F();
+	 		};
+	 		// 1. creates a temporary constructor
+	 		// 2. assigns a given object as the temporary constructor's prototype
+	 		// 3. returns a new instance of the temporary type
+
+	 		it("does not involve using strictly dfined constructors.", function() {});
+	 		it("Prototypes allow you to create new objects based on existing objects without the need for defining new types", function() {
+	 			var person = {
+	 				name: "Ivan",
+	 				friends: ["Johnny", "Katherine", "Laurence"]
+	 			};
+
+	 			var anotherPerson = object(person);
+	 			anotherPerson.name = "Monae";
+	 			anotherPerson.friends.push("Noelle");
+
+	 			var yetAnotherPerson = object(person);
+	 			yetAnotherPerson.name = "Octavius";
+	 			yetAnotherPerson.friends.push("Polonius");
+
+	 			// anotherPerson has person as its prototype, meaning it has bogth a primitive value property, and a reference value property on its prototype
+	 			expect(person.isPrototypeOf(anotherPerson)).toBe(true);
+	 			expect(anotherPerson.name).toBe("Monae");
+
+	 			// person.friends is shared not only by person but with anotherPerson and yetAnotherPErson
+	 			expect(person.friends).toMatch([["Johnny", "Katherine", "Laurence", "Noelle", "Polonius"]]);
+
+	 		});
+	 		describe("Reason to use this: you have an objet you want to use as a base for another object, so it should be passed into object() amd results in the object being modified accordingly", function() {});
+	 		it("The Object.create() method accepts two arguments, an object to use as the prototype for a new object, and an optional argument defining additional properties to apply to the new object", function() {
+	 			// when used with one argument, Object.create() behaves the same as the object() method above
+
+	 			var person = {
+	 				name: "Ivan",
+	 				friends: ["Johnny", "Katherine", "Laurence"]
+	 			};
+
+	 			var anotherPerson = Object.create(person); // using Object.create()
+	 			 anotherPerson.name = "Monae";
+	 			 anotherPerson.friends.push("Noelle");
+
+ 				var yetAnotherPerson = Object.create(person); // using Object.create()
+ 				yetAnotherPerson.name = "Octavius";
+ 				yetAnotherPerson.friends.push("Polonius");
+
+ 				expect(person.isPrototypeOf(anotherPerson)).toBe(true);
+ 				expect(anotherPerson.name).toBe("Monae");
+ 				expect(person.friends).toMatch([["Johnny", "Katherine", "Laurence", "Noelle", "Polonius"]]);
+
+	 		});
+	 		it("The second argument for Object.create() is in the same format as the second argument for Object.defineProperties(), each property to defined is specified along with a descriptor", function() {
+	 			// And any properties specified in this manner will shadow properties of the same name on the prototoype object
+	 			var person = {
+	 				name: "Ivan",
+	 				friends: ["Johnny", "Katherine", "Laurence"]
+	 			};
+
+	 			var anotherPerson = Object.create(person, { // descriptor object here
+	 				name: {
+	 					value: "Monae"
+	 				}
+	 			});
+	 			expect(anotherPerson.name).toBe("Monae");
+
+	 		});
 
 	 	});
 	 	describe("Parasitic Inheritance", function() {
