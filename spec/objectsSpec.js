@@ -212,7 +212,7 @@ describe("Objects", function() {
 			expect(isTooStringOwnProperty).toBe(false);
 		});
 		
-		it("To access enumerable (own and inherited) properties on objects, use the for/in loop", function() {
+		it("To access enumerable owned properties on objects, use the for/in loop", function() {
 			var food = {
 				fruit:"banana",
 				healthy: true,
@@ -230,6 +230,78 @@ describe("Objects", function() {
 
 		});
 
+		it("To access inherited properties on objects that are enumerable, use the for/in loop", function() {
+			function HigherLearning() {
+				this.educationLevel = "University";
+			};
+
+			var school = new HigherLearning();
+			school.schoolName = "MIT";
+			school.schoolLocation = "Boston";
+
+			var propertiesInSchool = [];
+			expect(propertiesInSchool.length).toBe(0);
+
+			for (var property in school) {
+				propertiesInSchool.push(property);
+			};
+			
+			// its own properties
+			expect(propertiesInSchool).toContain("schoolName");
+			expect(propertiesInSchool).toContain("schoolLocation");
+			// educationLEvel is not inherited from the HigherLearning constructor
+			// it is created as a new property on each object because it uses the 'this' keyboard to define the property
+			expect(propertiesInSchool).toContain("educationLevel");
+
+		});
+
+		describe("Deleting Properties", function() {
+			it("You can delete properties from an object using the delete operator", function() {
+				
+			});
+
+			it("You can't delete properties that were inherited", function() {
+
+			});
+
+			it("You can't delete properties that were set to configurable", function() {
+
+			});
+
+			it("You must delete inherited properties on the prototype object, where the properties were defined", function() {
+
+			});
+
+		}); // delete end
+
 	}); //own and inherited properties end
 }); //  objects end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
