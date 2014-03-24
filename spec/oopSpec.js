@@ -383,10 +383,32 @@ describe("OOP", function() {
 		});
 	}); // prototype pattern end
 	 describe("Combination Constructor/Prototype Pattern", function() {
+		it("constructor defines instance properties, whereas prototype pattern defines methods", function() {
+			function Animal(species, legs) {
+				this.habitats = ["Africa", "Asia"];
+				this.species = species;
+				this.legs = legs;
+			};
 
+			Animal.prototype = {
+				constructor: Animal,
+				
+				saySpecies: function() {
+					return this.species;
+				},
+				
+			};
+			var rhino = new Animal();
+			var rhino2 = new Animal();
+
+			rhino.habitats.push("Middle East");
+			expect(rhino.habitats).toMatch(["Africa", "Asia", "Middle East"]);
+			expect(rhino2.habitats).toMatch(["Africa", "Asia"]);
+		})
+	
 	 });
 
-	 describe("Dynamic Prototype Pattern", function() {
+	 describe("Dynamic Prototype Pattern/// TO DO", function() {
 
 	 });
 
@@ -417,6 +439,15 @@ describe("OOP", function() {
 	 	describe("Constructor Stealing", function() {
 
 	 	}); // constructor stealing end
+	 	describe("Prototypal Inheritance", function() {
+
+	 	});
+	 	describe("Parasitic Inheritance", function() {
+
+	 	});
+	 	describe("Parasitic Combination Inheritance", function() {
+
+	 	});
 
 	 }); //inheritance end
 }); // oop end
