@@ -503,9 +503,7 @@ describe("OOP", function() {
 	 			function SubType() { 
 	 				this.subproperty = false;
 	 			};
-	 			function SubType() { 
-	 				this.subproperty = false;
-	 			};
+	 			SubType.prototype = new SuperType();
 	 			SubType.prototype.getSubValue = function() {
 	 				return this.subproperty;
 	 			};
@@ -524,8 +522,6 @@ describe("OOP", function() {
 	 				expect(SuperType.prototyope.isPrototypeOf(instance)).toBe(true);
 	 				expect(SubType.prototyope.isPrototypeOf(instance)).toBe(true);
 	 				// each prototype in the chain has access to this method, which returns true for an instance in the chain
-
-
 	 			});
 	 			
 	 		});
@@ -533,13 +529,80 @@ describe("OOP", function() {
 
 	 		
 	 		it("Working with Methods", function() {
+	 			// a subType will need to override a sueprtype method or instroduce new methods not on the supertype
+	 			// these methods mustb e added to the prototype AFTER re-assigning the prototype
+	 			function SuperType() {
+	 				this.property = true;
+	 			};
+	 			//inherit from SuperType
+	 			SuperType.prototype.getSuperValue = function() {
+	 				return this.property;
+	 			};
+	 			function SubType() { 
+	 				this.subproperty = false;
+	 			};
+	 			SubType.prototype = new SuperType();
+	 			// new method
+	 			SubType.prototype.getSubValue = function() {
+	 				return this.subproperty;
+	 			};
+	 			// override existing method
+	 			SubType.prototype.getSubValue = function() { // this exists on the prototype, but this overrides the method for any SubTypes, but instances of SuperType will still call the original
+	 				return false;
+	 			}
+	 			var instance = new SubType();
+	 			expect(instance.getSubValue()).toBe(false);
 
 	 		});
-	 		it("Problems with Prototype Chaining", function() {
+	 		it("You can't use the object literal approach to creating prototype methods with prototype chaining, because they will overwrite the chain", function() {
+	 			function SuperType() {
+	 				this.property = true;
+	 			};
+	 			SuperType.prototype.getSuperValue = function() {
+	 				return this.property;
+	 			};
+	 			function SubType() { 
+	 				this.subproperty = false;
+	 			};
+	 			//inherit from SuperType
+	 			SubType.prototype = new SuperType();
 
+	 			// we use the object literal here
+	 			SubType.prototype = {
+	 				getSubValue: function() {
+	 					return this.subproperty;
+	 				}
+	 			};
+
+	 			var instance = new SubType();
+	 			// instance no longer has access to getSuperValue, as it had in the previous examples
+	 			expect(function () {instance.getSuperValue()}).toThrow(new TypeError("Object #<Object> has no method 'getSuperValue'"));
+
+
+	 		});
+	 		describe("Problems with Prototype Chaining", function() {
+	 			describe("Remember: prototype properties containing reference values are shared with all instances, so this is why they are shared within the constructor instead of the prototype", function() {});
+	 			it("But when implementing inheritance using prototypes, the prototype becomes an instance of another type, so what was once instance properties, are now prototype properties", function() {
+	 				function SuperType() {
+	 					this.colors = ["red", "blue", "green"];
+	 				};
+	 				function SubType() {};
+
+	 				// inherit from SuperType
+	 				SubType.prototype = new SuperType();
+
+	 				var instance = new SubType();
+	 				instance.colors.push("black");
+
+	 				var instance2 = new SubType();
+	 				expect(instance2.colors).toMatch(["red", "blue", "green", "black"]);
+	 				// all instances of SubType share a colors property
+	 				// changes made on instance.colors are now reflected on instance2.colors, and we don't want that
+	 			});
+	 			describe("Also, you can't pass arguments into the supertype constructor when the subtype instance is being created", function(){});
 	 		});
 	 		
-	 	}); //prototype chainign end
+	 	}); //prototype chaining end
 	 	describe("Constructor Stealing", function() {
 
 	 	}); // constructor stealing end
