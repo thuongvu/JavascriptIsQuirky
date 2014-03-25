@@ -125,5 +125,36 @@ describe("Function Expressions", function() {
 		});
 
 	}); // Recursion end
+	describe("Closures", function() {
+		describe("are functions that have access to  variables from another function's scope", function() {});
+		describe("When a function is called, an execution context is created, and its scope chain created", function() {});
+		describe("The activation object for the function is initialized with values for arguments and any named arguments", function() {});
+		describe("Then the outer function's activation object is the second object in the scope chain, and this continues until the scope chain reaches the global execution context", function() {});
+		it("For example", function() {
+			function compare(num1, num2) {
+				if (num1 < num2) {
+					return -1;
+				} else if (num1 > num2) {
+					return 1;
+				} else {
+					return 0;
+				};
+			};
+			var result = compare(5,10);
+			// this defines a function named compare() that is called in the global execution context
+			// when compare is called, a new activation object is created that contains arguments, num1, and num2
+			// the global execution context's variable object is next in the compare() execution context's scope chain, and it contains this, result, and compare
+		});
+		describe("An object represents the variables in each execution context.", function() {});
+		describe("A global context's variable object always exists, while a local context variable object exist while the function is executed", function() {});
+		describe("when defining a function, its scope chain is created, loaded with the global variable object, and saved to the [[scope]] property", function() {});
+		describe("When the function is called, an execution context is created and its scope chain is built up by coping the objects in the function's [[scope]] property", function() {});
+		describe("Then, the activation object, which also acts as a variable object, is created and pushed to the front of the context's scope chain", function() {});
+		describe("when the function is done executing, the local activation object is destroyed.  Closures, on the other hand...", function() {});
+		it("An anonymous function's scope chain contains a reference to the activation object for the outer function", function() {
+			var compare = createComparisonFunction("name");
+			var result = compare({name:"Quincy"}, {name: "Ruth"});
+		});
+	}); // Closures end
 
 }); // Function Expressions end
