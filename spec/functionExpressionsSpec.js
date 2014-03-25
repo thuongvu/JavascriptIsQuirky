@@ -475,7 +475,39 @@ describe("Function Expressions", function() {
 
 	}); // module pttern end
 	describe("The Module-Augmentation pattern", function() {
+		it("You can augment the object before returning it", function() {
+			// let's define a Component, this may be a component of our app
+			function Component() {};
 
+			var singleton = function() {
+				// private vars and functions
+				var privateVar = 20;
+				function privateFunction() {
+					return privateVar;
+				};
+
+
+				// create object
+				var object = new Component();
+
+				// add privileged properties and methods
+				object.publicProperty = true;
+
+				object.publicMethod = function() {
+					privateVar++;
+					return privateFunction();
+				};
+
+				// return object
+				return object;
+			}();
+
+			expect(singleton.publicMethod()).toBe(21);
+
+			// we create a var called object, that is a new instance of our Component
+			// this is a local version of what will become the Component object
+			// then public methods are aadded onto the Component object to access private variables, then we return it, which now assigns it to singleton
+		});
 	}); //module augmentation pattern end
 
 }); // Function Expressions end
