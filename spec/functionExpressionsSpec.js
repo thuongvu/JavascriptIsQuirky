@@ -183,6 +183,50 @@ describe("Function Expressions", function() {
 			compareNames = null;
 			expect(compareNames).toBe(null);
 		});
+		describe("Closures and variables", function() {
+// TO DO -- REDO THIS ONE, pg 225
+			it("The closure always gest te last value from the containing function, as they store a reference for the entire variable object, not just a particular variable", function() {
+				function createFunctions() {
+					var result = new Array();
+					for (var i = 0; i < 10; i++) {
+						result[i] = function() {
+							return i;
+						};
+					};
+					return result;
+				};
+
+				function createFunctionsCorrect() {
+					var result = new Array();
+
+					for (var i = 0; i < 10; i++) {
+						result[i] = function(num) {
+							return function() {
+								return num;
+							};
+						}(i);
+					};
+					return result;
+				};
+			});
+		}); // closures and variables end
+
+		describe("this object", function() {
+			
+		}); // this object end
+
 	}); // Closures end
 
 }); // Function Expressions end
+
+
+
+
+
+
+
+
+
+
+
+
