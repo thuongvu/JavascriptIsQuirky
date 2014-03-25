@@ -258,14 +258,75 @@ describe("Function Expressions", function() {
 				expect(   obj.getName()                   ).toBe("My object"); // calls the method the normal way, and returns "My object" because this.name is the same as object.name
 				expect(   (obj.getName())                 ).toBe("My object");  // places () around objecet.getName, which is actually equivalent to without the ()
 				expect(   (obj.getName = obj.getName)()   ).toBe("The window"); // it performs an assignment.  then calls the result.  the value of this assignment expression is the expression itself, (a function expression), so the this value is not maintained, and "The window" is returned
-
-
-
 			});
 
 		}); // this object end
 
 	}); // Closures end
+	describe("Memory leaks", function() {
+//TO DO, pg 227
+	});
+	describe("Mimicking block scope", function() {
+		it("The syntax for an anonymous function used as a block/private scope/immediately invoked function is", function() {
+			(function(){
+				// block code
+			})();
+			// this is a function declaration inside () to indicate that it's actually a function expression, and then invoked with the second set of () at the end
+		});
+		it("A less confusing view of the same syntax", function() {
+			// A less confusing view of the same syntax: 
+			var someFunction = function() {  // 1
+				// block code
+			};
+			someFunction();	// 2
+
+			// 1 a function expression. an anonymous function is created and assigned to the var someFunction
+			// 2 invoking it.  
+		});
+		it("Refactoring it, a function declaration can't have () at the end of it, throwing an error", function() {
+			// refactor
+
+			// if we do this, it will throw an error because javascript sees the fuction keyword as the beginning of a function declaration, and they cannot be followed by ()
+			// function() {
+			// 	// block code
+			// }()
+		});
+		it("but function expressions can be surrounded by (), therefore to turn a function declaration into an expression, we just surround it with ()", function() {
+			(function() {
+				// block code
+			})();
+		});
+		it("A block/private scope/immediately invoked function can be used where variables are needed temporarily", function() {
+			function outputNumbers(count) {
+				(function() {
+					for (var i =0; i < count; i++) {
+						return i;
+					};
+				})();
+				expect(function() {
+
+					i;
+
+				}).toThrow(new ReferenceError("i is not defined"));
+
+				//outside of the function, the i var is no longer accessible
+			};
+			outputNumbers(5);
+		});
+	
+	});
+	describe("Private variables", function() {
+
+	});
+	describe("Static Private variables", function() {
+
+	});
+	describe("The module pattern", function() {
+
+	});
+	describe("The Module-Augmentation pattern", function() {
+
+	});
 
 }); // Function Expressions end
 
