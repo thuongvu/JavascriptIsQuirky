@@ -63,4 +63,67 @@ describe("Function Expressions", function() {
 		});
 		describe("Any time a function is being used as avalue, it is a function expression", function() {});
 	}); // Function Declarations end
+	describe("Recursion", function() {
+		it("A classic factorial recursive function", function() {
+			function factorial(num) {
+				if (num <= 1) {
+					return 1;
+				} else {
+					return num * factorial(num - 1);
+				};
+			};
+			expect(factorial(5)).toEqual(120);
+		});
+		it("You can prevent a recursive function from functioning by changing the reference to the original function", function() {
+			function factorial(num) {
+				if (num <= 1) {
+					return 1;
+				} else {
+					return num * factorial(num - 1);
+				};
+			};
+
+			var anotherFactorial = factorial;
+			factorial = null;
+
+			expect(function(){
+
+				anotherFactorial(5)
+
+			}).toThrow(new TypeError("object is not a function"));
+
+			//this doesn't work because when factorial is set to null, only one reference to the original function remains
+			// therefore when anotherFactorial() is called, it will try to invoke factorial() which is null
+			
+		});
+		it("You can use arguments.callee, a pointer to the functon being executed, to call a function recursively", function() {
+			function factorial(num) {
+				if (num <= 1) {
+					return 1;
+				} else {
+					return num * arguments.callee(num - 1); // using arguments.callee will ensure that the function will work regardless of how its accessed
+				};
+			};
+			var anotherFactorial = factorial;
+			factorial = null;
+			expect(anotherFactorial(5)).toEqual(120);
+		});
+
+		it("arguments.callee will not work in strict mode.  Instead, use named function expressions", function() {
+			var factorial = (function f(num) {
+				if (num <= 1) {
+					return 1;
+				} else {
+					return num * f(num -1);
+				};
+			});
+
+			expect(factorial(5)).toBe(120);
+			// a named function express, f() is created and assigned to the variable factorial
+			// the name f remains the same if the funtion is assigned to another variable, so the recursive call will always execute correctly
+
+		});
+
+	}); // Recursion end
+
 }); // Function Expressions end
