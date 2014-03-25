@@ -126,20 +126,20 @@ describe("Function Expressions", function() {
 
 	}); // Recursion end
 	describe("Closures", function() {
+		function compare(num1, num2) {
+			if (num1 < num2) {
+				return -1;
+			} else if (num1 > num2) {
+				return 1;
+			} else {
+				return 0;
+			};
+		};
 		describe("are functions that have access to  variables from another function's scope", function() {});
 		describe("When a function is called, an execution context is created, and its scope chain created", function() {});
 		describe("The activation object for the function is initialized with values for arguments and any named arguments", function() {});
 		describe("Then the outer function's activation object is the second object in the scope chain, and this continues until the scope chain reaches the global execution context", function() {});
 		it("For example", function() {
-			function compare(num1, num2) {
-				if (num1 < num2) {
-					return -1;
-				} else if (num1 > num2) {
-					return 1;
-				} else {
-					return 0;
-				};
-			};
 			var result = compare(5,10);
 			// this defines a function named compare() that is called in the global execution context
 			// when compare is called, a new activation object is created that contains arguments, num1, and num2
@@ -151,9 +151,37 @@ describe("Function Expressions", function() {
 		describe("When the function is called, an execution context is created and its scope chain is built up by coping the objects in the function's [[scope]] property", function() {});
 		describe("Then, the activation object, which also acts as a variable object, is created and pushed to the front of the context's scope chain", function() {});
 		describe("when the function is done executing, the local activation object is destroyed.  Closures, on the other hand...", function() {});
+		function createComparisonFunction(propertyName) {
+			return function(object1, object2) {
+				var value1 = object1[propertyName];
+				var value2 = object2[propertyName];
+
+				if (value1 < value2) {
+					return -1;
+				} else if (value1 > value2) {
+					return 1;
+				} else {
+					return 0;
+				};
+			};
+		};
 		it("An anonymous function's scope chain contains a reference to the activation object for the outer function", function() {
 			var compare = createComparisonFunction("name");
 			var result = compare({name:"Quincy"}, {name: "Ruth"});
+			expect(result).toEqual(-1);
+		});
+		describe("when the anonymous function is returned from createComparisonFunction(), its scope chain has been initialized to contain the activation object from createComparisonFunction() and the global variable object", function() {});
+		describe("and the activation object from createComparisonFunction() cannot be destroyed until the function finishes executing, because the reference still exists in the anonymous function's scope chain", function() {});
+		it("after createComparisonFunction() completes, the scope chain for its execution context is destroyed, but its activation object will remain in memory until the anonymous function is destroyed", function() {
+			// the comparison function is created and stored in the variable compareNames
+			var compareNames = createComparisonFunction("name");
+			// call function
+			var result = compareNames({name:"Quincy"}, {name: "Ruth"});
+			expect(result).toEqual(-1);
+
+			// deference function so memory can be reclaimed
+			compareNames = null;
+			expect(compareNames).toBe(null);
 		});
 	}); // Closures end
 
