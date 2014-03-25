@@ -438,6 +438,40 @@ describe("Function Expressions", function() {
 
 	}); // static private variable end
 	describe("The module pattern", function() {
+		describe("The singleton pattern in JS is", function() {
+			var singleton = {
+				name: "Me",
+				method: function() {
+					// do something
+				}
+			};
+		});
+		it("The module pattern augments the singleton to allow for private variables and privileged methods", function() {
+			var singleton = function() {
+				//private vars and functions
+				var privateVar = 14;
+
+				function privateFunction() {
+					return privateVar;
+				};
+
+				// privileged public methods and properties
+				return {
+					publicProperty: true,
+					publicMethod: function() {
+						privateVar++;
+						return privateFunction();
+					}
+				};
+			}();
+
+			expect(singleton.publicMethod()).toBe(15)
+			// this pattern uses an anonymous function that returns an object
+			//inside the anonymous function, private vars and functions are defined first
+			// then return an object literal is returned as a function value, containing only those that we want public
+			// because the object is defined inside the anonymous function, all the public methods have access to the private variables and functions
+		});
+		describe("This pattern is useful when a single object must be created and initialized wtith data, and needs to expose public methods that have access to private data", function() {});
 
 	}); // module pttern end
 	describe("The Module-Augmentation pattern", function() {
