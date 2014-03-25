@@ -376,7 +376,66 @@ describe("Function Expressions", function() {
 		});
 	}); //private variable end
 	describe("Static Private variables", function() {
-		
+		it("Private scopes are the second way to create privileged methods", function() {
+			(function() {
+				// private vars/functions
+				var privateVar = 10;
+
+				function privateFunction() {
+					return privateVar;
+				};
+
+				// constructor
+				MyObject = function() {};  // 1
+
+				// public and privileged methods
+				MyObject.prototype.publicMethod = function() {
+					privateVar++;
+					return privateFunction();
+				};
+			})();
+
+			var newObj = new MyObject();
+
+			expect(newObj.publicMethod()).toBe(11);
+
+			// 1 note that this uses a function expression instead of a declaration. declarations always create local functions, which we don't want
+			// by not declaring MyObject with the var keyword, we create a global variable, available outside the private scope
+			// initializing an undeclard variable creates a global var, remember
+			// but assigning to an undeclared variable in strict mode causes an error
+			
+		});
+		it("this pattern is different from the previous in the fact that privat variables and functions are shared among instances because the privileged method is defined on the prototype", function() {
+			// as a closure, the privileged method always holds a reference to the containing scope
+			(function() {
+				var name = null;
+				Person = function(value) {
+					name = value;
+				};
+
+				Person.prototype.getName = function() {
+					return name;
+				};
+
+				Person.prototype.setName = function() {
+					name = value;
+				};
+			})();
+
+			var person1 = new Person("Me");
+			expect(person1.getName()).toBe("Me");
+
+			var person2 = new Person("You");
+			expect(person1.getName()).toBe("You"); // 1
+			expect(person2.getName()).toBe("You");
+
+			// 1. unexpectedly, person1 now returns "You" as well
+			// Now, the name var becomes static to be used among all instances
+			// calling setName() on one instance will affect all other instances
+			// Each instance will not have their own private variables
+
+		});
+
 	}); // static private variable end
 	describe("The module pattern", function() {
 
