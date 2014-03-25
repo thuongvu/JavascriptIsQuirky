@@ -760,10 +760,133 @@ describe("OOP", function() {
 
 	 	});
 	 	describe("Parasitic Inheritance", function() {
+	 		describe("The idea is to create a function that does the inheritance, augments the object, and then returns the object", function() {});
+	 		it("Implementing it looks like", function() {
+	 			function object(o) {
+	 				function F() {};
+	 				F.prototype = o;
+	 				return new F();
+	 			};
 
+	 			// 1 createAnother accepts a single argument, an object to base a new object on
+	 			// 2 original is passed into the object function, and result = clone
+	 			// 3 clone is changed to have a new method called sayHi()
+	 			// 4 object is returned
+	 			function createAnother(original) {  // 1
+	 				var clone = object(original);    // 2 
+	 				clone.sayHi = function() {			// 3
+	 					return "hello world";
+	 				};
+	 				return clone;							// 4
+	 			};
+
+	 			var person = {
+	 				name: "Ivan",
+	 				friends: ["Johnny", "Katherine", "Laurence"]
+	 			};
+
+	 			var anotherPerson = createAnother(person);
+	 			expect(anotherPerson.sayHi()).toBe("hello world");
+	 		});
+	 		it("It still has the same inefficiencies of the constructor pattern, relating to function reuse")
 	 	});
-	 	describe("Parasitic Combination Inheritance", function() {
 
+	 	describe("Parasitic Combination Inheritance", function() {
+	 		describe("Combination inheritance is the most used inheritance pattern in JS, but it is inefficient", function() {});
+	 		describe("It calls the supertype constructor twice: once to create the subtype's prototype, and once inside the subtype constructor", function(){});
+	 		it("This results in the subtype prototype ending up with instance properties of the supertype object, but to have them overwritten/shadowed when the subtype constructor executes", function() {
+	 			function SuperType(name) {
+	 				this.name = name;
+	 				this.colors = ["red", "blue", "green"];
+	 			};
+
+	 			SuperType.prototype.sayName = function() {
+	 				return this.name;
+	 			};
+
+	 			// when this is executed, the SuperType constructor is called again, which creates instance properties name and colors that masks the properties on the prototype
+	 			function SubType(name, age) { 		  // second call to SuperType 
+	 				SuperType.call(this, name);
+	 			};
+
+	 			// when this is executed, subType.prototype ends up with two properties: name and colors.  they are instance properties of superType, but they are now on the SubType's prototype
+	 			SubType.prototype = new SuperType();  // first call to SuperType
+	 			SubType.prototype.constructor = SubType;
+	 			SubType.prototype.sayAge = function() {
+	 				return this.age;
+	 			};
+
+	 			var instance = new SubType("Thuongvu", 22);
+	 			// properties on the instance
+	 			expect(instance.name).toBe("Thuongvu");
+	 			expect(instance.colors).toMatch([ 'red', 'blue', 'green' ]);
+
+	 			// properties on the prototype, but they aren't needed there
+	 			var propertiesOnSubType = [];
+	 			for (var properties in SubType.prototype) {
+	 				propertiesOnSubType.push(properties);
+	 			}
+	 			expect(propertiesOnSubType).toMatch(['name', 'colors', 'constructor', 'sayAge', 'sayName'])
+	 			expect(SubType.prototype.colors).toMatch([ 'red', 'blue', 'green' ])
+
+
+	 		});
+	 		describe("Parasitic combination inheritance: instead of calling the supertype's constructor to assign the subtype's prototype, just copy the supertype's prototype", function() {});
+	 		describe("Use it to inherit from the supertype's prototype and then assign the result to the subtype's prototype", function() {});
+	 		it("The implementation for this is", function() {
+	 			function object(o) {
+	 				function F() {};
+	 				F.prototype = o;
+	 				return new F();
+	 			};
+
+ 				// 0 two arguments, subtype constructor, and sueprtype constructor
+	 			// 1 create object. prototype of the newly created objecct will be superType.prototype. this clones the supertype's prototype
+	 			// 2 augment object. the constructor property is assigned onto prototype, the newly created object, to account for losing the default constructor peroperty when the prototype is overwritten
+	 			// 3  assign object.  it's ready!  the subtype's prototype is assigned to newly created object.
+	 			function inheritPrototype(subType, superType) {	 // 0
+	 				var prototype = object(superType.prototype);  // 1 
+	 				prototype.constructor = subType; 				 // 2
+	 				subType.prototype = prototype;					 // 3
+	 			};
+	 			// this will replace the subtype prototype assignment
+
+	 			function SuperType(name) {
+	 				this.name = name;
+	 				this.colors = ["red", "blue", "green"];
+	 			};
+
+	 			SuperType.prototype.sayName = function() {
+	 				return this.name;
+	 			};
+
+	 			// when this is executed, the SuperType constructor is called again, which creates instance properties name and colors that masks the properties on the prototype
+	 			function SubType(name, age) { 		  // call to SuperType 
+	 				SuperType.call(this, name);
+	 			};
+
+	 			// SubType.prototype = new SuperType(); // We can get rid of this first call
+	 			inheritPrototype(SubType, SuperType); // by using this instead, to replace the subtype prototype assignment
+	 			SubType.prototype.constructor = SubType;
+	 			SubType.prototype.sayAge = function() {
+	 				return this.age;
+	 			};
+
+	 			var instance = new SubType("Thuongvu", 22);
+	 			
+	 			// properties on the instance
+	 			expect(instance.name).toBe("Thuongvu");
+	 			expect(instance.colors).toMatch([ 'red', 'blue', 'green' ]);
+
+	 			// properties on the prototype are no longer redundant, as combination inheritance
+	 			var propertiesOnSubType = [];
+	 			for (var properties in SubType.prototype) {
+	 				propertiesOnSubType.push(properties);
+	 			}
+	 			expect(propertiesOnSubType).not.toMatch(['name', 'colors', 'constructor', 'sayAge', 'sayName']);
+	 			expect(propertiesOnSubType).toMatch(['constructor', 'sayAge', 'sayName'])
+	 			expect(SubType.prototype.colors).not.toMatch([ 'red', 'blue', 'green' ])
+	 		});
 	 	});
 
 	 }); //inheritance end
