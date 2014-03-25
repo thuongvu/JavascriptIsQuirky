@@ -211,8 +211,58 @@ describe("Function Expressions", function() {
 			});
 		}); // closures and variables end
 
-		describe("this object", function() {
-			
+		describe("The this object", function() {
+			it("is bound at runtime based on the context which a function is executed, so within an anonymous function, is not bound to the object, but window/undefined", function() {
+				// no var here to make contextName global
+				contextName = "The window";
+				var obj = {
+					contextName: "My object",
+					getName: function() {
+						return function() {
+							return this.contextName;
+						};
+					}
+				};
+				// getName() returns an anonymous function, which returns this.contextName;
+				// because getName returns a function, calling getName()() immediately calls the function that is returned, which returns a string
+				// each function automatically gets two variables as soon as the function is called: this, and arguments
+				// an inner function can't access these variables directly from an outer function
+				// but we can allow a closure to access a different this object by storing it in another variable that the closure can have acccess to
+				expect(obj.getName()()).toBe("The window");
+			});
+			it(" we can allow a closure to access a different this object by storing it (saving the reference) in another variable that the closure can have acccess to", function() {
+				contextName = "The window";
+				var obj = {
+					contextName: "My object",
+					getName: function() {
+						var that = this; 					// that
+						return function() {
+							return that.contextName;   // that
+						};
+					}
+				};
+				expect(obj.getName()()).toBe("My object");
+				// before defining the anonymous function, a variable named that is assigned to the this object
+				// therefore when the closure is defined, the slocure has access to that, because it is in the containing function
+				// even after the function has returned, that is still bound to obj, therefore when we call obj.getName()() it requires "my object"
+			});
+			it("A few other ways to call a method and their effect on a this object", function() {
+				contextName = "The window";
+				var obj = {
+					contextName: "My object",
+					getName: function() {
+						return this.contextName;
+					}
+				};
+
+				expect(   obj.getName()                   ).toBe("My object"); // calls the method the normal way, and returns "My object" because this.name is the same as object.name
+				expect(   (obj.getName())                 ).toBe("My object");  // places () around objecet.getName, which is actually equivalent to without the ()
+				expect(   (obj.getName = obj.getName)()   ).toBe("The window"); // it performs an assignment.  then calls the result.  the value of this assignment expression is the expression itself, (a function expression), so the this value is not maintained, and "The window" is returned
+
+
+
+			});
+
 		}); // this object end
 
 	}); // Closures end
