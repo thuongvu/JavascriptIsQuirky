@@ -299,8 +299,9 @@ describe("Function Expressions", function() {
 		it("A block/private scope/immediately invoked function can be used where variables are needed temporarily", function() {
 			function outputNumbers(count) {
 				(function() {
+					var arr = [];
 					for (var i =0; i < count; i++) {
-						return i;
+						arr.push(i);
 					};
 				})();
 				expect(function() {
@@ -309,24 +310,80 @@ describe("Function Expressions", function() {
 
 				}).toThrow(new ReferenceError("i is not defined"));
 
-				//outside of the function, the i var is no longer accessible
+				// outside of the block scope, the i var is no longer accessible
 			};
 			outputNumbers(5);
 		});
-	
+		it("A normal function", function() {
+			function outputNumbers(count) {
+				var arr = [];
+				for (var i = 0; i < count; i++) {
+					arr.push(i);
+				};
+				var i; // redeclare var i
+				expect(i).toEqual(10); // i is still available
+			};
+			outputNumbers(10)
+		});
+		describe("This pattern limits the closure memory problem, before there is no reference to the anonymous function, because it is destroyed immediately after the function has compeleted", function() {});
+
 	});
 	describe("Private variables", function() {
+		describe("A privileged method is a public method that has access to private vars/functions", function() {
+			it("One way to achieve this is to do so inside a constructor", function() {
+				function MyObject() {
+					// private vars/functions
+					var privateVar = 10;
+					function privateFunction() {
+						return privateVar;
+					};
 
-	});
+					// privileged methods
+					this.publicMethod = function() {
+						privateVar++;
+						return privateFunction();
+					};
+
+				};
+
+				var instance = new MyObject();
+
+				// trying to access privateVar throws an error, because we can't access it directly
+				expect(instance.privateVar).toBe(undefined);
+
+				// but we can use the publicMethod to access it indirectly
+				expect(instance.publicMethod()).toBe(11)
+			});
+			it("Another example of using a constructor", function() {
+				function Person(name) {
+					this.getName = function() {
+						return name;
+					};
+					this.setName = function (value) {
+						name = value;
+					};
+				};
+				
+				// using the getName and setName methods, both accessible methods outside the constructor that can access a private name variable
+				// since both methods are defined inside the constructor, they are closures and have access to name through the scope chain
+				var person = new Person("Me");
+				expect(person.getName()).toBe("Me");
+
+				person.setName("You");
+				expect(person.getName()).toBe("You");
+			});
+			describe("The downside is you must use the constructor pattern, which is flawed because a new method is created for every instance", function() {});
+		});
+	}); //private variable end
 	describe("Static Private variables", function() {
-
-	});
+		
+	}); // static private variable end
 	describe("The module pattern", function() {
 
-	});
+	}); // module pttern end
 	describe("The Module-Augmentation pattern", function() {
 
-	});
+	}); //module augmentation pattern end
 
 }); // Function Expressions end
 
