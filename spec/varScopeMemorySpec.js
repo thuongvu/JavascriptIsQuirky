@@ -86,15 +86,24 @@ describe("Variables, Scope, Memory", function() {
 			});
 		}); // Variable Declaration end
 		describe("Identifier Lookup", function() {
-
+// TODO pg 95-96
 		}); // Identifier Lookup end
 	}); // Execution context and scope end
 	describe("Garbage Collection", function() {
 		describe("Mark and sweep", function() {
-
+			describe("When a variable comes into context, (any way, including being declared in a function) it is flagged as being in context, and vice versa when it goes out", function() {});
+			describe("When the garbage collector runs, it marks all variables in memory.  Then clears marks off those in context and those referenced by in-context variables, then it sweeps away any that are still marked", function() {});
 		});
 		describe("Reference Counting", function() {
-
+			describe("Less commonly used", function() {});
+			describe("Every value keeps track of how many references are made to it, eg, variable declared and reference value declared, count = 1", function() {});
+			describe("Every time a var with a reference is overwritten with another var, reference count --", function() {});
+			describe("If no references left, garbage collector clears it", function() {});
+			describe("Problem: Circular references, wherein two objects reference each other through properties, and in mark&sweep they would be deleted after these objects go out of scope, but in this system, their reference counts cannot be 0, and never get deleted", function() {});
+		});
+		describe("Managing Memory", function() {
+			describe("De-referencing: When data is no longer necessary, it's best to set the value to null to free up the reference", function() {});
+			describe("Local variables do this automatically when they go out of context", function() {});
 		});
 	}); // Garbage Collection end
 }); // Variables, Scope, Memory end
