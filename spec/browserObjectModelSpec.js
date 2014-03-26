@@ -37,13 +37,41 @@ describe("Browser Object Model", function() {
 		it("window.open() accepts 4 arguments: URL to load, window target, string of features, boolean value indicating new page to take place of currently loaded page", function() {
 			// window.open("http://google.com", "_self"); // if you un-comment this, it will redirect to google.com in this window
 		
-
 			// the 3rd argument is ignored when not opening a new window
 			// window.open("http://google.com", "_blank", "fullscreen=yes, location=yes, toolbar=yes"); // opening a new window
 		});
 		describe("You can use window.close() to close a newly opened pop-up window, or top.close() to close automatically without confirmation of the user", function() {});
 	});	
-	describe("Intervals and timeouts", function() {});
+// TO DO
+	describe("Intervals and timeouts", function() {
+		it("You can set a timeout using window.setTimeout(), which accepts two arguemnts, the code to execute, and milliseconds to wait before execution", function() {
+			setTimeout(function() {
+			// execute something in 1000 milliseconds from now
+			// console.log("This will appear in 1 second!");     // uncomment this to try it
+			}, 1000);
+		});
+		it("When setTimeout() is called, it returns a numeric id for the timeout, and you can use clearTimeout() and pass in the timeout ID to cancel it", function() {
+			// set timeout
+			var myTimeout = setTimeout(function() {
+				console.log("This should not appear because the clearTimeout will clear myTimeout.");
+			}, 1000);
+
+			// cancel it
+			clearTimeout(myTimeout);
+		});
+	});
+	it("setInterval can be used to execute code repeatedly until the interval is cancelled or page unloaded", function() {
+		var numStart = 0;
+		var numEnd = 10;
+		function incrementNum() {
+			numStart++;
+			if (num <= numEnd) {
+				clearInterval(intervalId);
+			};
+		};
+
+		intervalId = setInterval(incrementNum, 100);
+	});
 	describe("Location Object", function() {
 		describe("Query String arguments", function() {});
 		describe("Manipulating Location", function() {});
