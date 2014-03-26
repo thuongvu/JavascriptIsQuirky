@@ -78,12 +78,22 @@ describe("Browser Object Model", function() {
 		describe("Query String arguments with location.search returns everything from the question mark until the end of the url", function() {});
 		describe("Manipulating Location", function() {
 			it("You can use assign() or window.location, or location.href to change the browser location", function() {
+																				// uncomment to try any of these
+				// location.href = "http://google.com";			// most commonly used
 				// window.location = "http://google.com";
-				// location.href = "http://google.com";
 				// location.assign("http://google.com");
 			});
+			it("You can change properties in the location object to change to different page, hash, search, hostname, pathname", function() {});
+			it("location.replace() loads a new place, but doesn't place it in history", function() {
+				// location.replace("http://google.com")			// uncomment to try
+			});
+			it("location.reload() can reload the displayed page, no arguments and it will reload from cache, pass 'true' and it will load from server", function() {
+				// location.reload()										// uncomment to try
+			});
+		}); // manipulating location end
+		describe("Navigator Object", function() {
+			
 		});
-		describe("Navigator Object", function() {});
 	}); // location object end
 	describe("History object", function() {});
 }); // brwoser object model end
