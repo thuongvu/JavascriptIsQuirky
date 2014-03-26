@@ -43,10 +43,49 @@ describe("The DOM", function() {
 
 	}); // node relationships end
 	describe("Manipulating nodes", function() {
-
+		describe("appendChild() adds a node to the end of childNodes list, and it returns the newly added node", function() {});
+		describe("If the node passed in already exists in the document, it's moved to the new location", function() {});
+		describe("The insertBefore() method places the node at a specific location, and accepts 2 arguments: the node to insert, and a reference node", function() {});
+		describe("The node to insert becomes the previousSibling of the reference node", function() {});
+		describe("If there's no reference node, then insertBefore() acts like appendChild()", function() {});
+		describe("replaceChild() accepts two arguments, the node to insert, and the node to replace", function() {});
+		describe("removeChild() accepts a single argument,the node to remove", function() {});
+		describe("cloneNode() creates an exact copy of a node, accepts a boolean argument.  If true, it clones the node and entire subtree.  If false, only the initial node.", function() {});
+		describe("normalize() searches a node and its descendants, and if empty text nodes are found, they are removed, and if text nodes are siblings, they're goined together into a single text node", function() {});
 	}); // manipulating nodes end
+	describe("Javascript represents document nodes with the Document type.  document, lowercase, is an object, a property of the window object.", function() {});
+	describe("Document children", function() {
+		it("The document.documentElement property points to the <html> element of a page", function() {
+			expect(document.childNodes[1]).toBe(document.documentElement);
+		});
+		it("The document.body property points to the <body> element of a page", function() {
+			expect(document.childNodes[1].childNodes[2]).toBe(document.body);
+		});
+	}); // document children end
+	describe("Document information", function() {
+		it("document.URL returns the full URL", function() {});
+		it("document.domain returns the domain", function() {});
+		it("document.referrer returns the referrer, if there is one", function() {});
+	}); // document information end
+	describe("Locating elements", function() {
+		it("getElementById() accepts one argument, the ID of an element to retrieve, and if none, will return null, else, reference to element", function() {
+			expect(document.getElementById("div1")).not.toBe(null); // it retrieves reference to div1
+			expect(document.getElementById("fakeId")).toBe(null);
+		});
+		it("getElementsByTagName() accepts one argument, the tag name of the elements to retrieve, and returns a nodeList containing 0 or more elements", function() {
+			expect(	document.getElementsByTagName('div').length	).toBeGreaterThan(2);
+		});
+		it("namedItem() lets you reference an item in the collection via name attribute", function() {});
+		it("To retrieve all elements in the document, pass in * to getElementsByTagName() ", function() {});
+		it("getElementsByName() returns all elements that have a given name attribute", function() {});
+		describe("documents.anchors = a elements that have a name attribute, document.forms = forms, document.images = img elements, document.links = a elements", function() {});
+	}); // locating elements end
+	describe("Document writing", function() {
+		
+	});
 }); // THE DOM END 
 describe("", function() {});
+it("", function() {});
 
 
 
