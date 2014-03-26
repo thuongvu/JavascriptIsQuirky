@@ -65,16 +65,24 @@ describe("Browser Object Model", function() {
 		var numEnd = 10;
 		function incrementNum() {
 			numStart++;
-			if (num <= numEnd) {
+			if (numEnd <= numEnd) {
 				clearInterval(intervalId);
 			};
 		};
 
 		intervalId = setInterval(incrementNum, 100);
 	});
-	describe("Location Object", function() {
-		describe("Query String arguments", function() {});
-		describe("Manipulating Location", function() {});
+	describe("The Location Object", function() {
+		describe("is a property of both the window and document, window.location and document.location point to the same object", function() {});
+		describe("and it can parse the URL into discrete segments: hash, host, hostname, href, pathname, port, protocol, search", function() {});
+		describe("Query String arguments with location.search returns everything from the question mark until the end of the url", function() {});
+		describe("Manipulating Location", function() {
+			it("You can use assign() or window.location, or location.href to change the browser location", function() {
+				// window.location = "http://google.com";
+				// location.href = "http://google.com";
+				// location.assign("http://google.com");
+			});
+		});
 		describe("Navigator Object", function() {});
 	}); // location object end
 	describe("History object", function() {});

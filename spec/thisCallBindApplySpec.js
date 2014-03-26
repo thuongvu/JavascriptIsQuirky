@@ -11,7 +11,8 @@ describe("This:", function() {
 	it("is not defined until an object invokes the this function at runtime");
 
 	it("If this is used in a global function, it refers to the window object", function() {
-		var name = "Abby";
+// making this global to fix this TO DO look at this again		
+		name = "Abby";
 		function showName() {
 			return this.name; // this will have value of window object
 		};
