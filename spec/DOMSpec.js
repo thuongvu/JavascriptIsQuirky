@@ -115,18 +115,48 @@ describe("The DOM", function() {
 			div1.className = "divClass"
 			div1.id = "div1";
 		});
-		it("You can use the getAttribute() method, intended to work on any attribute, including those defined as properties on the HTMLElement type", function() {
-			var div1 = document.getElementById("div1");
-			expect(div1.getAttribute("id")).toBe("div1");
-			expect(div1.getAttribute("class")).toBe("divClass");
+		describe("Get attributes", function() {
+			it("You can use the getAttribute() method, intended to work on any attribute, including those defined as properties on the HTMLElement type", function() {
+				var div1 = document.getElementById("div1");
+				expect(div1.getAttribute("id")).toBe("div1");
+				expect(div1.getAttribute("class")).toBe("divClass");
+			});
+			it("This includes custom attributes that aren't html properties", function() {
+				var div1 = document.getElementById("div1");
+				expect(div1.getAttribute("myCustomAttribute")).toBe("helloWorld");
+			});
+			describe("However, the style attribute doeesn't map correctly to the same value returned by getAttribute()", function() {});
+			describe("And event-handler attributes, such as onclick, because getAttribute() returns a string, whereas javascript would return a function when the onclick property is actually accessed", function() {});
+			describe("Because of these two differences, developers tend to access object properties instead of using getAttribute(), except in the case of custom attributes.", function() {});
 		});
-		it("This includes custom attributes that aren't html properties", function() {
-			var div1 = document.getElementById("div1");
-			expect(div1.getAttribute("myCustomAttribute")).toBe("helloWord");
+		describe("Setting attributes", function() {
+			it("You can set attributes using setAttribute(), which accepts two arguments, the name of the attribute to set, and the value to set it to", function() {
+				// setting the attribute
+				div1.setAttribute("id", "div1Modified");
+				// it's changed!
+				expect(div1Modified.id).toBe("div1Modified");
+				// changing it back
+				div1Modified.setAttribute("id", "div1");
+			});
+			it("Because all attributes are properties, assigning directly to the property can set teh attribute values", function() {
+				// assigning a custom property to a DOM element here
+				div1.myColor = "red";
+				// it does not make it automatically an attribute of the element
+				expect(div1.getAttribute("myColor")).toBe(null);
+				// even though it's a property here in JS, it is not on the DOM
+				expect(div1.myColor).toBe("red");
+			});
 		});
-		describe("However, the style attribute doeesn't map correctly to the same value returned by getAttribute()", function() {});
-		describe("And event-handler attributes, such as onclick, because getAttribute() returns a string, whereas javascript would return a function when the onclick property is actually accessed", function() {});
-	});
+		describe("Deleting attributes", function() {
+			it("removeAttribute() removes the attribute from the element altogther, not merely clearing the attribute's value", function() {
+				expect(div1.getAttribute("myCustomAttribute")).toBe("helloWorld");
+				div1.removeAttribute("myCustomAttribute");
+				expect(div1.getAttribute("myCustomAttribute")).toBe(null);
+				div1.setAttribute("myCustomAttribute", "helloWorld");
+			});
+		});
+	}); // html elements
+	
 }); // THE DOM END 
 describe("", function() {});
 it("", function() {});
