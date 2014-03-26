@@ -95,7 +95,7 @@ describe("The DOM", function() {
 	});
 	describe("HTML Elements", function() {
 		describe("are represented by the HTMLElement type, and it inherits from Element and adds several properties, available on every html element: id, title, lang, dir, className", function() {});
-		it("Information specified on the element may be retrieved via properties: .id, .className, .title, .lang, .dir", function() {
+		it("Information specified on the element (remember, an element has a type of HTMLElement, or an even more specific subtype) may be retrieved via properties", function() {
 			var div1 = document.getElementById("div1");
 			expect(div1.className).toBe("divClass");
 			expect(div1.id).toBe("div1");
@@ -115,6 +115,17 @@ describe("The DOM", function() {
 			div1.className = "divClass"
 			div1.id = "div1";
 		});
+		it("You can use the getAttribute() method, intended to work on any attribute, including those defined as properties on the HTMLElement type", function() {
+			var div1 = document.getElementById("div1");
+			expect(div1.getAttribute("id")).toBe("div1");
+			expect(div1.getAttribute("class")).toBe("divClass");
+		});
+		it("This includes custom attributes that aren't html properties", function() {
+			var div1 = document.getElementById("div1");
+			expect(div1.getAttribute("myCustomAttribute")).toBe("helloWord");
+		});
+		describe("However, the style attribute doeesn't map correctly to the same value returned by getAttribute()", function() {});
+		describe("And event-handler attributes, such as onclick, because getAttribute() returns a string, whereas javascript would return a function when the onclick property is actually accessed", function() {});
 	});
 }); // THE DOM END 
 describe("", function() {});
