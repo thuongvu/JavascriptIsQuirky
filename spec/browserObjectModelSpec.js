@@ -91,9 +91,13 @@ describe("Browser Object Model", function() {
 				// location.reload()										// uncomment to try
 			});
 		}); // manipulating location end
-		describe("Navigator Object", function() {
-			
-		});
 	}); // location object end
-	describe("History object", function() {});
+	describe("The Navigator Object is use to identify the client, for example, figuring out if the client has a plugin installed or not, and registerContentHandler and registerProtocolHandler, to specify that it can andle RSS, or protocol to set a web-email client for mail:to links", function() {});
+	describe("The screen object indicate's things like client's colorspace, etc, no use to developers", function() {});
+
+	describe("The History object", function() {
+		describe("is a property of window that represents a user's navigation history since the window was used", function() {});
+		describe("It's not possible to determine URL's, but only to navigate backwards history.go(-1) and forward history.go(1), or to match strings, history.go('google.com'), or back() and forward() as shortcuts", function() {});
+		describe("The history.length property indicates how many items are in history, forwards, and backwards, to determine if the user's start point was this page", function() {});
+	});
 }); // brwoser object model end
