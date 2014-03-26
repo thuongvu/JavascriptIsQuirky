@@ -155,6 +155,63 @@ describe("The DOM", function() {
 				div1.setAttribute("myCustomAttribute", "helloWorld");
 			});
 		});
+	describe("Create elements", function() {
+		it("New elements can be created using the document.createElement() method, and it accepts a single argument, the tag name of the element to create", function() {
+			// element doesn't exist yet
+			expect(document.getElementById("div3")).toBe(null);
+
+			// create a new element
+			var myDiv = document.createElement("div");
+			// manipulate the element's attributes, add children, etc
+			myDiv.id = "div3";
+			myDiv.className = "divClass";
+
+			// assign the value of .container to containerDiv appendChild(), passing myDiv to add it to .container
+			var containerDiv = document.body.childNodes[1];
+			containerDiv.appendChild(myDiv);
+
+			// the element exists now!  any changes to the element after this are immediately reflected by the browser
+			expect(document.getElementById("div3")).not.toBe(null);
+		});
+		describe("Elements may have any number of children and descendants, and the childNodes property contains all the immediate children on the element, and browsers identify elements, text nodes, comments, processing instructions completely differently", function() {});
+		describe("For example, some brwosers regard an ul > li > text to be 3, or 6", function() {});
+	}); // end create elements
+	describe("The text type", function() {
+		describe("Text nodes are represented by the Text type", function() {});
+		it("The text contained in a Text node may be accessed via the nodeValue property or the data property, both which contain the same value", function() {
+			var data = document.getElementById("divWithText").childNodes[1].childNodes[0].data;
+			var nodeValue = document.getElementById("divWithText").childNodes[1].childNodes[0].nodeValue;
+			expect(data).toEqual(nodeValue);
+		});
+		it("Once you have a reference to a text node, you can change it by assigning it the value of a string", function() {
+			var divWithText = document.getElementById("divWithText").childNodes[1].childNodes[0].data;
+			expect(divWithText).toBe("TEXT YO");
+			divWithText = "I changed the value!";
+			expect(divWithText).toBe("I changed the value!");
+		});
+		describe("Creating text nodes", function() {
+			it("New text nodes can be created using document.createTextNode(), which accepts a single argument, the text to be inserted into the node", function() {
+				// first, let's create a new div
+				var divForText = document.createElement("div");
+				divForText.className = "divClass";
+				divForText.id = "divForText";
+
+				// create a text node
+				var textNode = document.createTextNode("I am the greatest text node in the world.");
+
+				// appending it to the element
+				divForText.appendChild(textNode);
+
+				// appending it to the document inside the .container div
+				var containerDiv = document.body.childNodes[1];
+				containerDiv.appendChild(divForText);
+				
+				// testing it to see whether it is now on the DOM				
+				var textNowOnTheDom = document.getElementById("divForText").childNodes[0].data;
+				expect(textNowOnTheDom).toBe("I am the greatest text node in the world.");
+			});
+		});
+	});
 	}); // html elements
 	
 }); // THE DOM END 
