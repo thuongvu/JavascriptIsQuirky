@@ -81,7 +81,40 @@ describe("The DOM", function() {
 		describe("documents.anchors = a elements that have a name attribute, document.forms = forms, document.images = img elements, document.links = a elements", function() {});
 	}); // locating elements end
 	describe("Document writing", function() {
-		
+		describe("document.write() adds text as is, writeIn() appends a new line '\n' afterwards", function() {});
+		describe("If it's loaded after the page loads, it will overwrite it all, it must output to the page as its being rendered", function() {});
+	}); // document writing end
+	describe("The element type", function() {
+		describe("The Element type is most often used in web development", function() {});
+		it("An element's tag name is accessed via nodeName property or tagName property", function() {
+			var div1 = document.getElementById("div1");
+			// we expect it to return DIV, all caps, instead of div
+			expect(div1.tagName).toBe("DIV");
+			expect(div1.nodeName).toBe("DIV");
+		});
+	});
+	describe("HTML Elements", function() {
+		describe("are represented by the HTMLElement type, and it inherits from Element and adds several properties, available on every html element: id, title, lang, dir, className", function() {});
+		it("Information specified on the element may be retrieved via properties: .id, .className, .title, .lang, .dir", function() {
+			var div1 = document.getElementById("div1");
+			expect(div1.className).toBe("divClass");
+			expect(div1.id).toBe("div1");
+		});
+		it("You can also change element attributes by assigning new values to those properties", function() {
+			// before change
+			var div1 = document.getElementById("div1");
+			expect(div1.className).toBe("divClass");
+			expect(div1.id).toBe("div1");
+			// changing it
+			div1.className = "divClassChanged"
+			div1.id = "div1Changed";
+			// checking after it has changed
+			expect(div1.id).toBe("div1Changed");
+			expect(div1.className).toBe("divClassChanged");
+			// changing it back for sanity
+			div1.className = "divClass"
+			div1.id = "div1";
+		});
 	});
 }); // THE DOM END 
 describe("", function() {});
