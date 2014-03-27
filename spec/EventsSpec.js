@@ -39,7 +39,7 @@ describe("Events", function() {
 				domLevelZeroEventBtn.onclick = function() {
 					clicked = this.id;
 				};
-				domLevelZeroEventBtn.onclick();
+				domLevelZeroEventBtn.click();
 
 				expect(clicked).toBe('domLevelZeroEventBtn');
 			});
@@ -66,7 +66,77 @@ describe("Events", function() {
 			});
 			
 		});
-		describe("DOM level 2 Event Handlers", function() {});
+		describe("DOM level 2 Event Handlers", function() {
+			describe("uses addEventListener and removeEventListener(), methods that exist on all DOM nodes, accept 3 arguments: event name to handle, event handler function, boolean value: call event handler on capture phase (true) vs during bubble phase (false)", function() {
+				it("With addEventListener(), you can add multiple event handlers, and they fire off in the order they were added", function() {
+					var element = null;
+					var clicked = false;
+
+					// get the reference of the DOM node
+					var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+					
+					// add event listener, pass click, a function, and then false so it will call the event during bubble phase				
+					domLevelTwoEventBtn.addEventListener("click", function() {
+						element = this.id;
+					}, false);
+					domLevelTwoEventBtn.addEventListener("click", function() {
+						clicked = true;
+					}, false);
+
+					// click it
+					domLevelTwoEventBtn.click();
+
+					// yes, it works
+					expect(element).toBe("domLevelTwoEventBtn");
+					expect(clicked).toBe(true);
+
+				});
+				it("removeEventListener can remove an event handler by passing in the same arguemtns as were used when the handler was added, and anonymous functions cannot be removed, because they are different functions", function() {
+					var clicked = 0;
+					var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn")
+					domLevelTwoEventBtn.addEventListener("click", function() {
+						clicked++;
+					}, false);
+
+					domLevelTwoEventBtn.click();
+					expect(clicked).toEqual(1);
+
+					// attempting to remove the event handler
+					domLevelTwoEventBtn.removeEventListener("click", function() {
+						clicked++;
+					}, false);
+
+					// trying to invoke the function that should be deleted, but it's still there
+					domLevelTwoEventBtn.click();
+					expect(clicked).toEqual(2);
+
+				});
+				it("Let's try removeEventListener with a named function now", function() {
+					var clicked = 0;
+					// declaring function
+					var clickAdd = function() {
+						clicked++;
+					};	
+					// adding the event listener
+					var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn")
+					domLevelTwoEventBtn.addEventListener("click", clickAdd, false);
+
+					// invoking the function
+					domLevelTwoEventBtn.click();
+					expect(clicked).toEqual(1);
+
+					// remove NAMED eventListener
+					domLevelTwoEventBtn.removeEventListener("click", clickAdd, false);
+
+					// try to invoke function
+					domLevelTwoEventBtn.click();
+
+					// but clicked does not incremenet, and therefore the eventListener has been removed
+					expect(clicked).toEqual(1);
+
+				});
+			});
+		});
 		describe("Internet Explorer Event Handlers", function() {});
 		describe("Cross browser event handlers", function() {});
 		describe("Event/DOM Event object", function() {});
