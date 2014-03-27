@@ -31,8 +31,31 @@ describe("DOM Extensions", function() {
 	}); // selectors API end
 	describe("HTML5", function() {
 		describe("Class", function() {
-			describe("getElementsByClassName() method", function() {});
-			describe("classList property", function() {});
+			it("getElementsByClassName() method accepts one argument, a string of one or more class names, and returns a NodeList of all elements that have all the classes", function() {
+				var div2 = document.getElementById("div2");
+				var helloWorldInDiv2 = div2.getElementsByClassName("helloWorld");
+				expect(helloWorldInDiv2).not.toBe(null);
+			});
+			describe("The classList property", function() {
+				it("is used to check, add, remove, and toggle class names", function() {
+					var helloWorldClass = document.getElementsByClassName("helloWorld")[0];
+
+					// classList.add
+					expect(helloWorldClass.classList.contains("disabled")).toBe(false); // classList.contains
+					helloWorldClass.classList.add("disabled");								  
+					expect(helloWorldClass.classList.contains("disabled")).toBe(true);					
+					
+					// class.List.toggle
+					helloWorldClass.classList.toggle("blue");									
+					expect(helloWorldClass.classList.contains("blue")).toBe(true);
+					helloWorldClass.classList.toggle("blue");	
+					expect(helloWorldClass.classList.contains("blue")).toBe(false);
+
+					// classList.remove()
+					helloWorldClass.classList.remove("disabled");	
+					expect(helloWorldClass.classList.contains("disabled")).toBe(false);
+				});
+			});
 		}); // Class end
 		describe("Changes to HTML5 Document", function() {
 			describe("Focus", function() {});
