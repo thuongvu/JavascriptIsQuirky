@@ -58,11 +58,41 @@ describe("DOM Extensions", function() {
 			});
 		}); // Class end
 		describe("Changes to HTML5 Document", function() {
-			describe("Focus", function() {});
-			describe("readyState property", function() {});
+			describe("Focus", function() {
+				describe("document.activeElement always has an active poiter to the DOM elemnet that has focus", function() {});
+				it("You can use the focus() method to programmatically give an element focus", function() {
+// TO DO THIS ISNT WORKING				
+					var input = document.getElementById("inputForFocus");
+					input.focus();
+					// console.log(document.activeElement === input);
+				});
+			});
+			it("The readyState property on the document object indiates when the document has fully loaded", function() {
+				var ready = false;
+
+				expect(ready).toBe(false);
+
+				if (document.readyState == "complete") {
+					ready = true;
+				};
+
+				expect(ready).toBe(true);
+			});
 			describe("Markup insertion", function() {
-				describe("innerHTML", function() {});
-				describe("outerHTML", function() {});
+				describe("innerHTML", function() {
+					it("in read mode, returns html representing all of the child nodes, including elements, comments, and text nodes", function() {
+						var helloWorld = document.getElementsByClassName("helloWorld")[0];
+						expect(helloWorld.innerHTML).toBe("Hello world");
+					});
+					it("in write mode, replaces all of the child nodes in the element with a new DOM subtree based on the specified value", function() {
+						var helloWorld = document.getElementsByClassName("helloWorld")[0];
+						helloWorld.innerHTML = "This text is no longer hello world!";
+						expect(helloWorld.innerHTML).toBe("This text is no longer hello world!");
+					});
+				});
+				describe("outerHTML", function() {
+					
+				});
 				describe("insertAdjacentHTML()", function() {});
 			});
 		}); // Changes to HTML5 Document end
@@ -78,3 +108,5 @@ describe("DOM Extensions", function() {
 
 describe("", function() {});
 it("", function() {});
+
+
