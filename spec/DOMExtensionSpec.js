@@ -79,7 +79,7 @@ describe("DOM Extensions", function() {
 				expect(ready).toBe(true);
 			});
 			describe("Markup insertion", function() {
-				describe("innerHTML", function() {
+				describe("innerHTML is the html within an element", function() {
 					it("in read mode, returns html representing all of the child nodes, including elements, comments, and text nodes", function() {
 						var helloWorld = document.getElementsByClassName("helloWorld")[0];
 						expect(helloWorld.innerHTML).toBe("Hello world");
@@ -90,15 +90,31 @@ describe("DOM Extensions", function() {
 						expect(helloWorld.innerHTML).toBe("This text is no longer hello world!");
 					});
 				});
-				describe("outerHTML", function() {
-					
+				it("outerHTML is the html within an element, including the element itself, used when you want to replace the entire element and its contents", function() {
+// TO DO DOESNT WORK YET
+					// var helloWorld = document.getElementsByClassName("helloWorld")[0];
+					// helloWorld.outerHTML = "<p>This will replace</p>";
+					// console.log(helloWorld);
 				});
-				describe("insertAdjacentHTML()", function() {});
+				describe("insertAdjacentHTML() accepts two arguments, the position in which to insert, and the html text to insert", function() {
+// TO DO					
+					// position can be:
+					// "beforebegin" - insert before the element as a previous sibling
+					// "afterbegin" - insert just inside of the elemnt as a new child or series of chidren before the first child
+					// "beforeend" - insert just inside of the elemnt as a new child or series of children after the last child
+					// "afterend" - insert just after the element as a next sibling
+				});
 			});
 		}); // Changes to HTML5 Document end
 	}); // HTML5 end
 	describe("Propietary extensions", function() {
-		describe("children Property", function() {});
+		describe("The children Property", function() {
+			it("is an HTMLCollection that contains only an element's child nodes that are also elements", function() {
+				var ul = document.getElementById("div1").childNodes[1];
+				var ulChildren = ul.children;
+				expect(ulChildren.length).toEqual(3);
+			});
+		});
 		describe("contains() method", function() {});
 	}); // Propietary extensions end
 }); //"DOM Extensions" end
