@@ -115,7 +115,9 @@ describe("DOM Extensions", function() {
 				expect(ulChildren.length).toEqual(3);
 			});
 		});
-		describe("contains() method", function() {});
+		describe("contains() method", function() {
+// TO DO
+		});
 	}); // Propietary extensions end
 }); //"DOM Extensions" end
 
