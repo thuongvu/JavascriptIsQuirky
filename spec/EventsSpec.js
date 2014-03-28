@@ -164,7 +164,7 @@ describe("Events", function() {
 
 					// expect(clicked).toBe(window);
 				});
-
+				it("When two attachEvent() handlers are added to the same element, the event handlers fire in reverse order they were added, unlike DOMLevel2", function() {});
 				it("The detachEvent() method can remove attachEvent()'s only if they are named functions, similarly to removeEventListener()", function() {
 					// // won't work unless in IE, uncomment to try
 					// var clicked = 0;
@@ -188,10 +188,56 @@ describe("Events", function() {
 					// expect(clicked).toEqual(1);	
 
 				});
-				
+
 			});
 		});
-		describe("Cross browser event handlers", function() {});
+		describe("Cross browser event handlers", function() {
+			it("It must work on the bubbling phase, and have AddHandler() and removeHandler(), which accept 3 arguments: element to act upon, name of event, event handler function", function() {
+				var EventUtil = {
+					addHandler: function(element, type, handler) {
+						if (element.addEventListener) {
+							element.addEventListener(type, handler, false);
+						} else if (element.attachEvent) {
+							element.attachEvent("on" + type, handler);
+						} else {
+							element["on" + type] = handler;
+						};
+					},
+
+					removeHandler: function(element, type, handler) {
+						if (element.removeEventListener) {
+							element.removeEventListener(type, handler, false);
+						} else if (element.detachEvent) {
+							element.detachEvent("on" + type, handler);
+						} else {
+							element["on" + type] = null;
+						};
+					}
+				};
+
+				// try it out
+				var clicked = 0; // for test
+				// get element
+				var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+				// handler
+				var clickIncrement = function() {
+					clicked++;
+				};
+				// use the utility method to attach handler
+				EventUtil.addHandler(domLevelTwoEventBtn, 'click', clickIncrement);
+				// invoke function
+				domLevelTwoEventBtn.click();
+				domLevelTwoEventBtn.click();
+				// yes, it works!
+				expect(clicked).toEqual(2);
+
+
+				// remove the eventHandler now
+				EventUtil.removeHandler(domLevelTwoEventBtn, 'click', clickIncrement);
+				domLevelTwoEventBtn.click();
+				expect(clicked).toEqual(2);
+			});
+		});
 		describe("Event/DOM Event object", function() {});
 		describe("Internet Explorer Event Object", function() {});
 		describe("Cross-browser Event Object", function() {});
