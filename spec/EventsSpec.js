@@ -368,7 +368,28 @@ describe("Events", function() {
 				expect(documentBodyClicked).toEqual(0);	// this time, the event does not bubble up, stopping the event handler on document.body from being fired
 
 			});
-			
+			it("eventPhase helps determine what phase of event flow is currently active, 1 = capture, 2 = target, 3 = bubble", function() {
+				var orderEventPhase = [];
+				var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+				domLevelTwoEventBtn.onclick = function(event) {
+					orderEventPhase.push("domLevelTwoEventBtn: " + event.eventPhase);
+				};
+
+				document.body.addEventListener("click", function(event) {
+					orderEventPhase.push("document.body: " + event.eventPhase);
+				}, true);
+
+				document.body.onclick = function(event) {
+					orderEventPhase.push("document.body: " + event.eventPhase);
+				};
+
+				domLevelTwoEventBtn.click();
+
+				expect(orderEventPhase).toMatch(["document.body: 1", "domLevelTwoEventBtn: 2", "document.body: 3"] );
+				// when the button is clicked, the first event handler to fire is the document.body in capture phase, eventPhase is 1
+				// then the event handler on the button is fired, eventPhase is 2
+				// the last event handler is during the bubbling phase of document.body, and the eventPhase is 3
+			});
 
 		});
 		describe("Internet Explorer Event Object", function() {});
