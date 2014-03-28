@@ -234,11 +234,143 @@ describe("Events", function() {
 
 				// remove the eventHandler now
 				EventUtil.removeHandler(domLevelTwoEventBtn, 'click', clickIncrement);
+				// try to invoke the click again
 				domLevelTwoEventBtn.click();
+				// clicked var remains the same, it works!
 				expect(clicked).toEqual(2);
 			});
 		});
-		describe("Event/DOM Event object", function() {});
+		describe("Event/DOM Event object", function() {
+			it("No matter level 1 or level 2, when a DOM event is fired, all information is gathered and stored on an event called event", function() {
+				var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+				var currentTarget, eventPhase, eventTarget, eventType, that = null;
+
+				domLevelTwoEventBtn.addEventListener("click", function(event) {
+					currentTarget = event.target;			// 1
+					eventPhase = event.eventPhase;		// 2 
+					eventTarget = event.target;			// 3
+					typeOfEvent = event.type;				// 4
+					that = this;								// 5
+				}, false);
+
+				domLevelTwoEventBtn.click();
+
+				expect(currentTarget).toBe(domLevelTwoEventBtn);
+				expect(eventPhase).toBe(2);
+				expect(eventTarget).toBe(domLevelTwoEventBtn)
+				expect(typeOfEvent).toBe("click");
+				expect(that).toBe(domLevelTwoEventBtn);
+
+				// 1 currentTarget is the element whose event handler is currently handling the event
+				// 2 eventPhase is the phase during which event handler is being called, 1 capturing, 2 at target, 3 bubbling
+				// 3 target is the target of the event
+				// 4 type is the etype of event fired
+				// 5 this is the value of currentTarget
+				// in this case, currentTarget, target, and this share the same value, because the event handler was assigned directly onto the target
+			});
+			it("the event.currentTarget, target, and this may not be equal is the evnet handler exists on the parent node", function() {
+				var currentTarget, that, target = null;
+				// add eventHandler
+				document.body.onclick = function(event) {
+					currentTarget = event.currentTarget;
+					that = this;
+					target = event.target;
+				};
+				// click
+				document.body.click();
+				// we invoked the click from document.body
+				expect(currentTarget).toBe(document.body);
+				expect(that).toBe(document.body);
+				expect(target).toBe(document.body);
+
+
+
+				//  if the event handler is on the parent node of the button, now THIS and CURRENTARGET are equal to document.body
+				// remember that 'this' points to the value of currentTarget, and currentTarget points to the element whose event handler is currently handling the event
+				// but the target is the target of the event, in this case below, the button element itself
+				// since the button doesn't have an event handler assigned, the click event bubbles up to document.body, which handles the event
+				var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+				domLevelTwoEventBtn.click();
+				expect(currentTarget).toBe(document.body);
+				expect(that).toBe(document.body);
+				expect(target).toBe(domLevelTwoEventBtn);
+			});
+			it("the event.type property is useful to assign a single funtion to handle multiple events", function() {
+				var clicked = 0;
+				var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+				var handler = function(event) {
+					switch(event.type) {
+						case "click":
+							clicked++;
+							break;
+						case "mouseover":
+							event.target.style.backgroundColor = "red";
+							break;
+						case "mouseout":
+							event.target.style.backgroundColor = "";
+							break;
+					};
+				};
+
+				domLevelTwoEventBtn.onclick = handler;
+				domLevelTwoEventBtn.onmouseover = handler;
+				domLevelTwoEventBtn.onmouseout = handler;
+
+				domLevelTwoEventBtn.click();
+				expect(clicked).toEqual(1);
+
+				// can't test mouseover, TO DO
+
+			});
+			it("preventDefault is used to prevent the default action of a particular event", function() {
+				var googleLink = document.getElementById("googleLink");
+				// if you commented this out, the page will redirect to google.com
+				googleLink.onclick = function(event) {
+					event.preventDefault();
+				}
+				// if you commented this out, the page will redirect to google.com
+				googleLink.click();
+			});
+			it("Normally, an event bubbles up", function() {
+				var btnClicked = 0;
+				var documentBodyClicked = 0;
+				var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+				domLevelTwoEventBtn.onclick = function(event) {
+					btnClicked++;
+				};
+				document.body.onclick = function(event) {
+					documentBodyClicked++;
+				};
+
+				domLevelTwoEventBtn.click();
+
+				expect(btnClicked).toEqual(1);
+				expect(documentBodyClicked).toEqual(1);
+
+				// we didn't invoke a click on document.body, but the event bubbled up
+			});
+			it("stopPropagation() stops the flow of an event through the DOM immediately, cancelling any further event capturing or bubbling before it occurs", function() {
+				// same as the last example, event we add stopPropagation() method on event for domLEvelTwoEventsBtn.onclick
+				var btnClicked = 0;
+				var documentBodyClicked = 0;
+				var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+				domLevelTwoEventBtn.onclick = function(event) {
+					btnClicked++;
+					event.stopPropagation();				// what we added
+				};
+				document.body.onclick = function(event) {
+					documentBodyClicked++;
+				};
+
+				domLevelTwoEventBtn.click();
+
+				expect(btnClicked).toEqual(1);
+				expect(documentBodyClicked).toEqual(0);	// this time, the event does not bubble up, stopping the event handler on document.body from being fired
+
+			});
+			
+
+		});
 		describe("Internet Explorer Event Object", function() {});
 		describe("Cross-browser Event Object", function() {});
 		describe("Event Types", function() {
