@@ -118,7 +118,7 @@ describe("Events", function() {
 						clicked++;
 					};	
 					// adding the event listener
-					var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn")
+					var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
 					domLevelTwoEventBtn.addEventListener("click", clickAdd, false);
 
 					// invoking the function
@@ -137,7 +137,60 @@ describe("Events", function() {
 				});
 			});
 		});
-		describe("Internet Explorer Event Handlers", function() {});
+		describe("Internet Explorer Event Handlers", function() {
+			describe("have similar methods called attachEvent() and detachEvent(), which accept two arguments, event handler name, and event handler function, no boolean because IE only supports event bubbling, not event capturing", function() {
+				it("Add an event handler with attachEvent(),", function() {
+					// won't work unless in IE, uncomment to try
+					// var clicked = 0;
+
+					// var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+					// domLevelTwoEventBtn.attachEvent("onclick", function() {
+							// clicked++;
+					// });
+
+					// expect(clicked).toEqual(1);
+
+
+				// also, take note that it is 'onclick', and not 'click', as addEventListener.  
+				});
+				it("The attachEvent() handler runs in the global context, so its this value == window, vs DOMLevel2 where this value == element, or even DOMLevel1 where this == element", function() {
+					// // won't work unless in IE, uncomment to try
+					// var clicked = null;
+					// var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+					// domLevelTwoEventBtn.attachEvent("onclick", function() {
+					// 	clicked = this;
+					// });
+					// domLevelTwoEventBtn.click();
+
+					// expect(clicked).toBe(window);
+				});
+
+				it("The detachEvent() method can remove attachEvent()'s only if they are named functions, similarly to removeEventListener()", function() {
+					// // won't work unless in IE, uncomment to try
+					// var clicked = 0;
+					// var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+					// // declaring function to invoke when 'onclick'd
+					// function clickIncrement() {
+					// 	clicked++;
+					// };
+					// // attach event
+					// domLevelTwoEventBtn.attachEvent("onclick", clickIncrement);
+
+					// // invoke it
+					// domLevelTwoEventBtn.click();
+					// expect(clicked).toEqual(1);				
+
+					// // detach event
+					// domLevelZeroEventBtn.detachEvent("onclick", clickIncrement);
+
+					// // try to click it again, and expect clicked to remain 1
+					// domLevelTwoEventBtn.click();
+					// expect(clicked).toEqual(1);	
+
+				});
+				
+			});
+		});
 		describe("Cross browser event handlers", function() {});
 		describe("Event/DOM Event object", function() {});
 		describe("Internet Explorer Event Object", function() {});
