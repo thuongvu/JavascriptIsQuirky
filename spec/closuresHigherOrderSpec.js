@@ -106,3 +106,78 @@ describe("Closures", function() {
 	});
 	
 }); // closures end
+describe("Callbacks/Higher order functions", function() {
+	// when we pass a callback function as an argument to another function, we are only passing the function definition, doSomething
+	// we are not executing the function in the parameter, doSomething()
+	// now that the containing, outer function has the callback function in its parameter as a function definition, it can execute the callback function at any time, called back at a time inside the containing function's body
+
+	// therefore, a callback is aclosure, and closuers have access to the containing function's scope variables + global
+	it("We can use named or anonymous functions as callbacks", function() {
+		var allUserData = [];
+		var globalVar = {name: "C", specialty: "D"};
+
+		function logData(userData) {
+			var arrayOfPropsValues = [];
+			for (var prop in userData) {
+				var str = prop + " : " + userData[prop];
+				arrayOfPropsValues.push(str.toString());
+			};
+			return arrayOfPropsValues;
+		};
+
+		function getInput(item, callback) {
+			allUserData.push(item);
+			return callback(item);
+		};
+
+		var a = getInput({name: "A", specialty: "B"}, logData);
+		var b = getInput(globalVar, logData);
+
+		// using a callback function to declare a named functio nand passing the name of the function to the parameter
+		expect(a).toMatch(["name : A", "specialty : B"]);
+		// passing paramters to callback functions, for example global vars
+		expect(b).toMatch(["name : C", "specialty : D"]);
+
+	});
+	it("Using methods with the this object as callbacks", function() {
+		// we have to modify how we execute the callback function to preserve the this object context, otherwise it will point to the global window object, or the object of the containing method
+		var clientData = {
+			id: 111,
+			fullName: null,
+			setUserName: function (firstName, lastName) {
+				this.fullName = firstName + " " + lastName;
+			}
+		};
+
+		function getUserInput(firstName, lastName, callback) {
+			callback(firstName, lastName);
+		};
+
+		getUserInput("Barack", "Obama", clientData.setUserName);
+
+		expect(clientData.fullName).toBe(null);
+
+		// the fullName property was initialized onthe window object
+		// expect(window.fullName).toBe("Barack Obama");
+
+
+		function getUserInputWithCall(firstName, lastName, callback, callbackObj) {
+			callback.call(callbackObj, firstName, lastName);
+		}
+
+		getUserInputWithCall("Barack, OBama", clientData.setUserName, clientData);
+		expect(clientData.fullName).toBe("Barack Obama");
+
+
+	});
+}); // callbacks/higher order functions end
+
+
+
+
+
+
+
+
+
+
