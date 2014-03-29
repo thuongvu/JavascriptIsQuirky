@@ -595,9 +595,27 @@ describe("Events", function() {
 			});
 		});
 		describe("HTML5 Events", function() {
-			describe("DOMContentLoaded Event", function() {});
-			describe("readystatechange Event is from IE, and it's not to be trusted", function() {});
-			describe("hashchange Event", function() {});
+			describe("DOMContentLoaded Event", function() {
+				// whereas the window's load fires when everything on the page has been loaded, domcontentloaded fires as soon as the dom tree is formed
+				it("allows event handlers to be attached earlier in the page download process, faster interactivity for users", function() {
+					// attach an event handler to document or to window - the target of the event is document, but it will bubble up to window
+					document.addEventListener("DOMContentLoaded", function(event) {
+						// do something
+					}, false);
+				});
+			});
+			describe("readystatechange == 'interactive' Event is from IE, similar to DOMContentLoaded, fires when the DOM tree is loaded", function() {
+				// document.attachEvent("readystatechange", function(event) {
+					// if (document.readyState == "interactive") {
+						// do something
+					// };
+				// });
+			});
+			describe("hashchange Event", function() {
+				window.addEventListener("hashchange", function(event) {
+					console.log("Old URL: " + event.oldURL + "  New URL: " + event.newURL);
+				});
+			});
 		});
 		describe("Memory and performance", function() {
 			describe("Event delegation", function() {});
