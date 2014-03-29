@@ -534,7 +534,7 @@ describe("Events", function() {
 				googleLink.click();
 				// this works if the page does not redirect to google.com
 			});
-			it("cancelBubble()", function() {
+			it("stopPropagation()", function() {
 				// 5 cancelBubble preforms the same action as stoPropagation(), stops the event from bubbling
 				// stopPropagation stops both capture and bubbling, whereas IE's cancelBubble only stops bubbling because IE doesnt have capture
 				var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
@@ -542,7 +542,8 @@ describe("Events", function() {
 				var domLevelTwoEventBtnClicked = 0;
 				domLevelTwoEventBtn.onclick = function(event) {
 					domLevelTwoEventBtnClicked++;
-					window.event.cancelBubble = true;
+					event = EventUtil.getEvent(event);
+					EventUtil.stopPropagation(event);
 				};
 
 				document.body.onclick = function() {
