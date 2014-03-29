@@ -684,4 +684,101 @@ describe("Events", function() {
 			describe("Custom DOM events", function() {});
 		});
 	});
+	describe("Function binding w/ events", function() {
+		var EventUtil = {
+			addHandler: function(element, type, handler) { 
+				if (element.addEventListener) {
+					element.addEventListener(type, handler, false);
+				} else if (element.attachEvent) {
+					element.attachEvent("on" + type, handler);
+				} else {
+					element["on" + type] = handler;
+				};
+			}
+		};
+		it("Not preserving code execution context while passing functions around as variables", function() {
+			var onClickMessage = null;
+
+			var handler = {
+				message: "Event handled",
+				handleClick: function (event) {
+					onClickMessage = this.message;
+				}
+			};
+
+			var eventDel3 = document.getElementById("eventDel3");
+			EventUtil.addHandler(eventDel3, "click", handler.handleClick);
+			eventDel3.click();
+			expect(onClickMessage).toBe(undefined);
+
+			// in this example above, we create a handler singleton object with a method called handleClick that we assign as an evnet handler to a DOM button
+			// we expect it to set onClickMessage to this.message from the singleton object, but it is undefined
+			// we are in the context of the DOM button/window object if this is IE, so we need to preserve the this
+		});
+		it("We can use a closure", function() {
+			var onClickMessage = null;
+			var handler = {
+				message: "Event handled in closure",
+				handleClick: function (event) {
+					onClickMessage = this.message;
+				}
+			};
+
+			var eventDel3 = document.getElementById("eventDel3");
+			EventUtil.addHandler(eventDel3, "click", function(event) {
+				handler.handleClick(event);
+			});
+
+			eventDel3.click();
+			expect(onClickMessage).toBe("Event handled in closure");
+
+			// we use a closure to call handler.handleClick() inside the onclick event handler
+		});
+		it("Using a bind()", function() {
+			var onClickMessage = null;
+			var handler = {
+				message: "Event handled in native bind",
+				handleClick: function (event) {
+					onClickMessage = this.message;
+				}
+			};
+
+			var eventDel3 = document.getElementById("eventDel3");
+			EventUtil.addHandler(eventDel3, "click", handler.handleClick.bind(handler));
+			eventDel3.click();
+			expect(onClickMessage).toBe("Event handled in native bind");
+
+			// bind is useful whenever a function pointer must be passed as a value and that needs to be executed in a particular context
+		});
+		it("Let's implement out own bind()", function() {
+			var onClickMessage = null;
+			var handler = {
+				message: "Event handled in custom bind",
+				handleClick: function (event) {
+					onClickMessage = this.message;
+				}
+			};
+
+			var eventDel3 = document.getElementById("eventDel3");
+
+			// a bind() functon will take a function and a context, returning a function that calls the given function in the given context, with all arguments intact
+			function bind(fn, context) {
+				return function() {
+					return fn.apply(context, arguments);
+				};
+			};
+
+			// it creates a closure within bind() that calls the passed in function using apply(), passing in the context object, and the arguments
+			// the arguments is for the inner function, for not bind
+			// when the returned function is called, it executes the passed in function in the given context, passing in all the arguments
+			EventUtil.addHandler(eventDel3, "click", bind(handler.handleClick, handler));
+
+			// the handler.handleClick() gets the passed event object as usual, since all arguments are passed through the bound function directly to it
+			eventDel3.click();
+			expect(onClickMessage).toBe("Event handled in custom bind");
+
+		});
+	});
 });
+
+
