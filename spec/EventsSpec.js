@@ -535,7 +535,7 @@ describe("Events", function() {
 				// this works if the page does not redirect to google.com
 			});
 			it("stopPropagation()", function() {
-				// 5 cancelBubble preforms the same action as stoPropagation(), stops the event from bubbling
+				// 6 cancelBubble preforms the same action as stoPropagation(), stops the event from bubbling
 				// stopPropagation stops both capture and bubbling, whereas IE's cancelBubble only stops bubbling because IE doesnt have capture
 				var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
 				var documentBodyClicked = 0;
@@ -559,15 +559,44 @@ describe("Events", function() {
 
 		});
 		describe("Event Types", function() {
-			describe("UI", function() {});
-			describe("Focus", function() {});
-			describe("Wheel", function() {});
+			var EventUtil = {
+				addHandler: function(element, type, handler) { 
+					if (element.addEventListener) {
+						element.addEventListener(type, handler, false);
+					} else if (element.attachEvent) {
+						element.attachEvent("on" + type, handler);
+					} else {
+						element["on" + type] = handler;
+					};
+				}
+			};
+			describe("Load event", function() {
+				var loadedDOMLevelTwo = 0;
+				EventUtil.addHandler(window, "load", function(event) {
+					loadedDOMLevelTwo = 1;
+				});
+
+				it("trying the load event", function() {
+					expect(loadedDOMLevelTwo).toEqual(1);
+				});
+
+			});
+			describe("Unload event", function() {
+				it("It will fire when a document has completely unloaded, eg navigating from one page to another, and used to dereference", function() {
+					EventUtil.addHandler(window, "unload", function(event) {
+						// do something
+					});
+				});
+			});
+			describe("Resize event", function() {
+				EventUtil.addHandler(window, "resize", function(event) {
+					// do something
+				});
+			});
 		});
 		describe("HTML5 Events", function() {
-			describe("BeforeUnload", function() {});
 			describe("DOMContentLoaded Event", function() {});
-			describe("readystatechange Event", function() {});
-			describe("pageshow/pagehide Event", function() {});
+			describe("readystatechange Event is from IE, and it's not to be trusted", function() {});
 			describe("hashchange Event", function() {});
 		});
 		describe("Memory and performance", function() {
