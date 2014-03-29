@@ -390,9 +390,59 @@ describe("Events", function() {
 				// then the event handler on the button is fired, eventPhase is 2
 				// the last event handler is during the bubbling phase of document.body, and the eventPhase is 3
 			});
+			describe("At eventPhase2, this, target, and currentTarget are always all equal", function() {});
 
 		});
-		describe("Internet Explorer Event Object", function() {});
+		describe("Internet Explorer Event Object", function() {
+			describe("is accessible in different ways depending in which way the event handler was assigned", function() {
+				it("With DOMLevel0, the event object only exists as a property of the window object", function() {
+					var eventObject;
+					var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+					domLevelTwoEventBtn.onclick = function() {
+						eventObject = window.event; // event object accessed from window.event
+					};
+					domLevelTwoEventBtn.click();
+
+					expect(eventObject.type).toBe("click");
+
+				});
+				it("If the event handler is assigned using attachEvent(), the event object is passed in as the sole argument to the function", function() {
+					// if using IE, uncomment this
+
+					// var eventObject;
+					// var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+					// domLevelTwoEventBtn.attachEvent("onclick", function(event) {
+					// 	eventObject = event; // event object accessed from argument passed to the function
+					// });
+
+					// domLevelTwoEventBtn.click();
+					// expect(eventObject.type).toBe("click");
+
+
+					// event object accessed from argument passed to the function
+
+				});
+				describe("If the event handler is assigned as an html attribute, the event object will be available as a var called event, same as DOM-html pattern", function() {});
+				it("The value of this cannot always be asusmed to equal the event target, so use event.srcElement instead", function() {
+					// var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+					// domLevelTwoEventBtn.onclick = function() {
+
+					// }
+				});
+				it("instead of preventDefault(), set the window.event.returnValue to false", function() {
+					// var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+					// domLevelTwoEventBtn.onclick = function() {
+						// window.event.returnValue = false;
+					// }
+				});
+				it("instead of stopPropagation(), set window.event.cancelBubble to true", function() {
+					// var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+					// domLevelTwoEventBtn.onclick = function() {
+						// window.event.cancelBubble = true;
+					// }
+				});
+			});
+		});
 		describe("Cross-browser Event Object", function() {});
 		describe("Event Types", function() {
 			describe("UI", function() {});
