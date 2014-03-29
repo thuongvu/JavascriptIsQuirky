@@ -585,6 +585,7 @@ describe("Events", function() {
 				it("It will fire when a document has completely unloaded, eg navigating from one page to another, and used to dereference", function() {
 					EventUtil.addHandler(window, "unload", function(event) {
 						// do something
+						// this is a good place to set eventHandler's to null, otherwise they will remain in memory when you go forward, backwards, etc
 					});
 				});
 			});
@@ -673,21 +674,14 @@ describe("Events", function() {
 				// less memory used
 
 			});
-			describe("Removing event handlers", function() {});
+			describe("Removing event handlers", function() {
+				// set btn.onclick = null; to reclaim memory during garbage collection, if you are attaching event handlers to individual elements
+				// use event delegation
+				// note that removing a button, for instance, prevents bubbling to the event, because an event will only bubble if its taret is still present in the document
+				// page unload - if event handlers arent cleaned up before the page is unloaded, it still remains in memory. eg, load, unload page, navigating away, back, etc
+				// good to set event handlers to null inside an onunload event handler
+			});
 			describe("Custom DOM events", function() {});
 		});
 	});
 });
-
-
-
-
-
-
-
-describe("", function() {});
-it("", function() {});
-
-
-
-
