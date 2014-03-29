@@ -443,7 +443,120 @@ describe("Events", function() {
 				});
 			});
 		});
-		describe("Cross-browser Event Object", function() {});
+		describe("Cross-browser Event Object", function() {
+			var EventUtil = {
+				// 1
+				addHandler: function(element, type, handler) { 
+					if (element.addEventListener) {
+						element.addEventListener(type, handler, false);
+					} else if (element.attachEvent) {
+						element.attachEvent("on" + type, handler);
+					} else {
+						element["on" + type] = handler;
+					};
+				},
+				// 2
+				removeHandler: function(element, type, handler) {
+					if (element.removeEventListener) {
+						element.removeEventListener(type, handler, false);
+					} else if (element.detachEvent) {
+						element.detachEvent("on" + type, handler);
+					} else {
+						element["on" + type] = null;
+					};
+				},
+
+				// 3
+				getEvent: function(event) {
+					return event ? event : window.event;
+				},
+
+				// 4
+				getTarget: function(event) {
+					return event.target || event.srcElement;
+				},
+
+				// 5
+				preventDefault: function(event) {
+					if (event.preventDefault) {
+						event.preventDefault();
+					} else {
+						event.returnValue = false;
+					};
+				},
+
+				// 6
+				stopPropagation: function (event) {
+					if (event.stopPropagation) {
+						event.stopPropagation();
+					} else {
+						event.cancelBubble = true;
+					};
+				}
+
+			};
+			it("getEvent()", function() {
+				// 1 & 2 = copied from earlier
+				// 3 - returns a reference to the event object, regardless of event handler assignment approach used in IE & in other browsers too
+					var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+					var eventObject = null;
+					expect(eventObject).toBe(null);
+					domLevelTwoEventBtn.onclick = function(event) {
+						eventObject = EventUtil.getEvent(event);
+					};
+					// invoke click
+					domLevelTwoEventBtn.click();
+					// test
+					expect(eventObject).not.toBe(null);
+
+
+			});
+			it("getTarget()", function() {
+				// 4 getTarget() returns the target of the event, to see if the target proeprty is available and returns its value if it is, otherwise returns srcElement
+				var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+				var target = null;
+				domLevelTwoEventBtn.onclick = function(event) {
+					event = EventUtil.getEvent(event);
+					target = EventUtil.getTarget(event);
+				};
+				domLevelTwoEventBtn.click();
+				expect(target).toBe(domLevelTwoEventBtn);
+			});
+
+			it("preventDefault()", function() {
+				// 5 stops the default behavior of an event
+				// when the event object is passed in, it is checked to see if the preventDefault method is availble, then invokes it, if not, sets returnValue to false
+				var googleLink = document.getElementById("googleLink");
+				googleLink.onclick = function(event) {
+					event = EventUtil.getEvent(event);
+					EventUtil.preventDefault(event);
+				};
+				googleLink.click();
+				// this works if the page does not redirect to google.com
+			});
+			it("cancelBubble()", function() {
+				// 5 cancelBubble preforms the same action as stoPropagation(), stops the event from bubbling
+				// stopPropagation stops both capture and bubbling, whereas IE's cancelBubble only stops bubbling because IE doesnt have capture
+				var domLevelTwoEventBtn = document.getElementById("domLevelTwoEventBtn");
+				var documentBodyClicked = 0;
+				var domLevelTwoEventBtnClicked = 0;
+				domLevelTwoEventBtn.onclick = function(event) {
+					domLevelTwoEventBtnClicked++;
+					window.event.cancelBubble = true;
+				};
+
+				document.body.onclick = function() {
+					documentBodyClicked++;
+				};
+
+				domLevelTwoEventBtn.click();
+				expect(documentBodyClicked).toEqual(0);
+				expect(domLevelTwoEventBtnClicked).toEqual(1);
+
+			});
+			
+
+		});
 		describe("Event Types", function() {
 			describe("UI", function() {});
 			describe("Focus", function() {});
