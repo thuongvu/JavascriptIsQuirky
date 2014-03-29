@@ -618,7 +618,61 @@ describe("Events", function() {
 			});
 		});
 		describe("Memory and performance", function() {
-			describe("Event delegation", function() {});
+			var EventUtil = {
+				addHandler: function(element, type, handler) {
+					if (element.addEventListener) {
+						element.addEventListener(type, handler, false);
+					} else if (element.attachEvent) {
+						element.attachEvent("on" + type, handler);
+					} else {
+						element["on" + type] = handler;
+					};
+				},
+				getEvent: function(event) {
+					return event ? event : window.event;
+				},
+				getTarget: function(event) {
+					return event.target || event.srcElement;
+				}
+			};
+			describe("Event delegation", function() {
+				it("involves assigning an event handler to manage all events of a particular type, for example clicks, which bubble all the way up to the document level", function() {
+					var target = null;
+					EventUtil.addHandler(document.body, "click", function(event) {
+						event = EventUtil.getEvent(event);
+						target = EventUtil.getTarget(event);
+
+						switch (target.id) {
+							case "eventDel1":
+								// do something
+								break;
+							case "eventDel2":
+								// do something
+								break;
+							case "eventDel3":
+								// do something
+								break;
+						};
+					});
+					eventDel1.click();
+					expect(target).toBe(eventDel1);
+
+					eventDel2.click();
+					expect(target).toBe(eventDel2);
+
+					eventDel3.click();
+					expect(target).toBe(eventDel3);
+				});
+
+
+				// since all the buttons are children of this element, their events bubble up and are handled by this function
+				// event target is the specific button that was clicked, so we can check the id property
+				// this retrieves one dom element and attaches on event handler, less memory usage
+				// by attaching to the document object, it's immediately available, and assignable at any point of the page's load - dont need to wait for load or DOMContentLoaded events
+				// less time to set up
+				// less memory used
+
+			});
 			describe("Removing event handlers", function() {});
 			describe("Custom DOM events", function() {});
 		});
