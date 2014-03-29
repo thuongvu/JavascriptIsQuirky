@@ -1,3 +1,131 @@
+describe("Function Type:", function() {
+
+	describe("Functions as Values:", function() {
+		it("functions can return functions", function() {
+			function invoke(func, withThisArgument) { // 1st argument is a function, 2nd is argument to be a value to pass to that function
+				return func(withThisArgument);
+			};
+
+			function sayHelloFunc(name) {
+				return "Hello, " + name;
+			};
+
+			expect(invoke(sayHelloFunc, "Fresh Prince of Bel Air")).toMatch("Hello, Fresh Prince of Bel Air");
+
+		});
+	});
+
+// TODO pg 140 has great example
+
+	describe("Function Internals:", function() {
+		describe("The arguments object", function() {
+
+			it("has a property called callee, a pointer to the function that owns the arguments object", function() {
+				// a normal factorial recursive function
+				function factorial(num) {
+					if (num <= 1) {
+						return 1;
+					} else {
+						return num * factorial(num -1);
+					};
+				};
+				expect(factorial(5)).toEqual(120);
+
+				// let's decouple the execution of the function name, "factorial" within the function using arguments.callee
+				function factorialDecoupled(num) {
+					if (num <= 1) {
+						return 1;
+					} else {
+						return num * arguments.callee(num -1); // ensures that it calls the function, regardless of how the function is referenced
+					};
+				};
+
+				expect(factorialDecoupled(5)).toEqual(120); // trying it out, it works!
+
+				var factorialDecoupledCopy = factorialDecoupled; // storing the function pointer in a new variable
+				factorialDecoupled = function() { // reassign factorialDecoupled
+					return "Broke the link";
+				};
+
+				expect(factorialDecoupledCopy(5)).toEqual(120); // function pointer intact because argumens.callee always references correct function
+				expect(factorialDecoupled(5)).toEqual("Broke the link");
+
+			});
+		});
+	});
+	describe("Function properties and methods: Each function has a ", function() {
+		it("Length property that indicates number of named arguments that it expects", function() {
+			function add(num1, num2) {};
+			expect(add.length).toEqual(2);
+		});
+
+		it("Prototype property where all the instance methods and references types exist and are accessed from");
+
+		it("the apply() method which calls a function with a specific this value, accepts two arguments: value of this, and array of arguments", function() {
+			function add(num1, num2) {
+				return num1 + num2;
+			};
+			expect(add.apply(this, [1,2])).toEqual(3);
+		});
+
+		it("The apply() method can accept 1. this (value of this object inside function body) and 2. arguments object", function() {
+			function add(num1, num2) {
+				return num1 + num2;
+			};
+			function applyAddWithArgumentsObj(num1, num2) { // passing in the arguments object
+				return add.apply(this, arguments);
+			};
+			expect(applyAddWithArgumentsObj(1,2)).toEqual(3);
+		});
+
+		it("The apply() method can accept 1. this(value of object inside function body, and 2. an array of arguments", function() {
+			function add(num1, num2) {
+				return num1 + num2;
+			};
+			function applyAddWithArray(num1, num2) {
+				return add.apply(this, [num1, num2]);
+			};
+			expect(applyAddWithArray(1,2)).toEqual(3);
+		});
+
+		it("The call() method accepts 1. this value, and 2. arguments passed directly into the function", function() {
+			function add(num1, num2) {
+				return num1 + num2;
+			};
+			function callAdd(num1, num2) {
+				return add.call(this, num1, num2);
+			};
+			expect(callAdd(1,2)).toEqual(3);
+		});
+
+		it("call() and apply() can be used to call a function in context of a specific object", function() {
+			window.color = "red";
+			var obj = {color: "blue"};
+
+			function sayColor() {
+				return this.color;
+			};
+
+			expect(sayColor()).toMatch("red");
+			// switch the context of the function so that 'this' points to obj
+			expect(sayColor.call(obj)).toMatch("blue"); 
+			expect(sayColor.apply(obj)).toMatch("blue");
+		});
+
+		it("bind() creates a new function instance with a this value bound to the value passed into bind", function() {
+			window.color = "red";
+			var obj = {color: "blue"};
+
+			function sayColor() {
+				return this.color;
+			};
+
+			var bindedSayColor = sayColor.bind(obj); // a new function is created by calling bind() on sayColor, passing in obj
+			expect(bindedSayColor()).toMatch("blue"); // now, bindedSayColor has a this value of obj
+		});
+	});
+
+}) // function type end, i think
 describe("This:", function() {
 	it("should hold value of undefined in global functions and anonymous functions  if not bound to objects in strict mode", function() {
 		window.color = 'blue';
