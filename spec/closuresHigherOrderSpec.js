@@ -201,6 +201,50 @@ describe("Callbacks/Higher order functions", function() {
 
 	});
 }); // callbacks/higher order functions end
+describe("Currying functions", function() {
+	function add(num1, num2) {
+		return num1 + num2;
+	};
+	describe("create functiosn that have one or more arguments already set, using a closure, to return a function with some arguments passed in", function() {});
+	it("A simple example, not technically a curried function, but demonstrates rough idea", function() {
+		function curriedAdd(num2) {
+			return add(5, num2);
+		};
+
+		var a = add(1,2);
+		var b = curriedAdd(4);
+
+		expect(a).toEqual(3);
+		expect(b).toEqual(9);
+	});
+	it("are usually created dynamically by calling another function, passing in a function to curry and arguments to supply", function() {
+		function curry(fn) {
+			var args = Array.prototype.slice.call(arguments, 1); // 1
+			return function() {
+				var innerArgs = Array.prototype.slice.call(arguments); // 2
+				var finalArgs = args.concat(innerArgs); // 3
+				return fn.apply(null, finalArgs); // 4
+			};
+		};
+
+		// 1 the first argument of curry(fn) is the function, so we call slice on the arguments object, to get all the arguments past the first element, and that's why we pass in the 1
+		// 2 for the inner function, we call slice on every element of the argument's object
+		// 3 we use the concat() method on them to combine the arguments
+		// 4 now we return fn.apply, with null, to not set a context explicitly, and finalArgs, the combined arguments of both inner and outer functions
+	
+		// now, to try it out
+		var curriedAdd = curry(add, 5); // 5
+		var allTogether = curriedAdd(6); // 6
+		expect(allTogether).toEqual(11); // 7
+		// 5 add() is created, with its first argument bound to 5, and it returns a function
+		// 6 with the returned function, we pass in 6, which will be the second argument of add()
+
+		// we can even pass in all the function arguments at once
+		var curriedAdd2 = curry(add, 10, 20);
+		expect(    curriedAdd2()    ).toEqual(30);
+	});
+	
+}); // end currying fnctions
 
 
 
