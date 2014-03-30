@@ -161,13 +161,43 @@ describe("Callbacks/Higher order functions", function() {
 		// expect(window.fullName).toBe("Barack Obama");
 
 
+		
+
+
+	});
+	it("Using call", function() {
+		var clientData = {
+			id: 111,
+			fullName: null,
+			setUserName: function (firstName, lastName) {
+				this.fullName = firstName + " " + lastName;
+			}
+		};
+
 		function getUserInputWithCall(firstName, lastName, callback, callbackObj) {
 			callback.call(callbackObj, firstName, lastName);
 		}
 
-		getUserInputWithCall("Barack, OBama", clientData.setUserName, clientData);
+		getUserInputWithCall("Barack", "Obama", clientData.setUserName, clientData);
 		expect(clientData.fullName).toBe("Barack Obama");
 
+	});
+	it("Using apply", function() {
+		var clientData = {
+			id: 111,
+			fullName: null,
+			setUserName: function (firstName, lastName) {
+				this.fullName = firstName + " " + lastName;
+			}
+		};
+
+		function getUserInputWithApply(firstName, lastName, callback, callbackObj) {
+			callback.apply(callbackObj, [firstName, lastName]);
+		};
+
+		getUserInputWithApply("Joe", "Biden", clientData.setUserName, clientData);
+
+		expect(clientData.fullName).toBe("Joe Biden");
 
 	});
 }); // callbacks/higher order functions end
