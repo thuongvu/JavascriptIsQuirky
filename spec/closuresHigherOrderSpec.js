@@ -243,6 +243,20 @@ describe("Currying functions", function() {
 		var curriedAdd2 = curry(add, 10, 20);
 		expect(    curriedAdd2()    ).toEqual(30);
 	});
+	it("function binding", function() {
+		function bind(fn, context) { // 1
+			var args = Array.prototype.slice.call(arguments, 2); // 2
+			return function() {
+				var innerArgs = Array.prototype.slice.call(arguments);
+				var finalArgs = args.concat(innerArgs);
+				return fn.apply(context, finalArgs); // 3
+			};
+		};
+		// 1 while curry accepts a function to wrap, bind() accepts the function as well as a context object
+		// 2 therefore arguments for the bound function start at the third argument instead of 2nd, making it 2 instead of 1 like curry
+		// 3 when fn.apply() is called, instead of null, we pass in thecontext object, which may have some arguments set already
+
+	});
 	
 }); // end currying fnctions
 
