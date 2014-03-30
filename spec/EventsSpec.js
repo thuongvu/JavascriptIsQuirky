@@ -778,7 +778,7 @@ describe("Events", function() {
 			expect(onClickMessage).toBe("Event handled in custom bind");
 
 		});
-	});
+	}); // function binding with events done
 });
 
 
